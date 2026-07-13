@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strategic Trades - Family Trade Ideas</title>
+    <title>Brannon Trades - Strategic Trade Ideas</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Inter Font -->
@@ -472,7 +472,7 @@
     <!-- CORE SCRIPTS & SECURE HANDLERS -->
     <script>
         /* DATABASE STATE DICTIONARIES */
-        window.userRole = 'admin'; // 'admin' or 'viewer'
+        window.userRole = 'viewer'; // Default to viewer on fresh boot
         window.currentTicker = 'BTCUSD';
         window.activeTimeframe = '1M';
         window.drawingTool = 'select'; // 'select' or 'trendline'
@@ -486,8 +486,8 @@
         // Twelve Data API Storage Key
         window.marketApiKey = '';
 
-        // Master Whitelist (stored locally for bypass simulations)
-        window.systemWhitelist = ['peter.brannon@gmail.com', 'brannontrades@gmail.com', 'family@brannontrades.com'];
+        // Master Authorized Lists (Secured locally for simulate runtimes)
+        window.systemWhitelist = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
         window.masterPasscode = 'SmithFamilyCode';
 
         // Tickers database storing historical candles, drawings, notes, and compressed screenshots
@@ -1019,14 +1019,29 @@
         }
 
         function switchUserRole(role) {
+            // STRICT GATE: Prevent unauthorized toggle attempts to Admin role
+            const currentSession = document.getElementById('session-badge-text').textContent.trim().toLowerCase();
+            if (role === 'admin' && currentSession !== 'peter.brannon@gmail.com') {
+                showToast('Access Denied', 'Only peter.brannon@gmail.com is authorized to enter Admin View.', 'error');
+                return;
+            }
+
             window.userRole = role;
             
             const btnAdmin = document.getElementById('btn-mode-admin');
             const btnFamily = document.getElementById('btn-mode-family');
+            const roleContainer = document.getElementById('role-toggle-container');
+            
+            // Only expose role toggles to the admin
+            if (currentSession === 'peter.brannon@gmail.com') {
+                if (roleContainer) roleContainer.classList.remove('hidden');
+            } else {
+                if (roleContainer) roleContainer.classList.add('hidden');
+            }
             
             if (role === 'admin') {
-                btnAdmin.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md";
-                btnFamily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white";
+                if (btnAdmin) btnAdmin.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md";
+                if (btnFamily) btnFamily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white";
                 document.getElementById('add-ticker-container').classList.remove('hidden');
                 document.getElementById('drawing-tools-container').classList.remove('hidden');
                 document.getElementById('screenshot-admin-controls').classList.remove('hidden');
@@ -1036,8 +1051,8 @@
                 document.getElementById('admin-whitelist-card').classList.remove('hidden');
                 document.getElementById('workspace-grid').className = "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4";
             } else {
-                btnAdmin.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white";
-                btnFamily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md";
+                if (btnAdmin) btnAdmin.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white";
+                if (btnFamily) btnFamily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md";
                 document.getElementById('add-ticker-container').classList.add('hidden');
                 document.getElementById('drawing-tools-container').classList.add('hidden');
                 document.getElementById('screenshot-admin-controls').classList.add('hidden');
@@ -1356,14 +1371,22 @@
             const isApproved = approvedList.includes(emailClean);
 
             if (isApproved) {
-                errorEl.classList.add('hidden');
+                if (errorEl) errorEl.classList.add('hidden');
                 document.getElementById('session-badge-text').textContent = emailClean;
                 document.getElementById('lock-screen').classList.add('opacity-0', 'pointer-events-none');
                 document.getElementById('google-signin-modal').classList.add('hidden');
-                showToast('Access Granted', `Signed in securely as: ${emailClean}`, 'success');
+                
+                // EXECUTE STRICT ROLE BOUNDARIES ON LOGIN
+                if (emailClean === 'peter.brannon@gmail.com') {
+                    switchUserRole('admin');
+                    showToast('Admin Access', `Welcome Master Administrator: ${emailClean}`, 'success');
+                } else {
+                    switchUserRole('viewer');
+                    showToast('Family Access', `Signed in as Family Member: ${emailClean}`, 'success');
+                }
             } else {
-                errorTextEl.textContent = `"${emailClean}" is not whitelisted.`;
-                errorEl.classList.remove('hidden');
+                if (errorTextEl) errorTextEl.textContent = `"${emailClean}" is not whitelisted.`;
+                if (errorEl) errorEl.classList.remove('hidden');
                 showToast('Access Denied', `${emailClean} is not whitelisted.`, 'error');
             }
         }
@@ -1395,6 +1418,11 @@
         }
 
         function openConfigModal() {
+            const currentSession = document.getElementById('session-badge-text').textContent.trim().toLowerCase();
+            if (currentSession !== 'peter.brannon@gmail.com') {
+                showToast('Security Alert', 'Viewer sessions cannot modify database or API settings.', 'error');
+                return;
+            }
             document.getElementById('config-modal').classList.remove('hidden');
         }
 
@@ -1552,10 +1580,14 @@
         }
 
         window.onload = function() {
-            // Self-healing state bootstrapper guarantees admin email stays in local whitelist cache
-            if (!window.systemWhitelist.map(e => e.toLowerCase()).includes('peter.brannon@gmail.com')) {
-                window.systemWhitelist.unshift('peter.brannon@gmail.com');
-            }
+            // SELF-HEALING STATE BOOTSTRAPPER:
+            // Forces all mandated emails into the runtime list, neutralizing legacy localStorage saves
+            const requiredEmails = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
+            requiredEmails.forEach(email => {
+                if (!window.systemWhitelist.map(e => e.toLowerCase()).includes(email)) {
+                    window.systemWhitelist.push(email);
+                }
+            });
 
             loadNotesFromMemory();
             
@@ -1565,6 +1597,8 @@
             rebuildDatasetCache();
             renderWhitelistTags();
             
+            // Default workspace load as viewer until explicit authenticated pass
+            switchUserRole('viewer');
             selectTicker('BTCUSD');
 
             const pc = document.getElementById('price-canvas');
