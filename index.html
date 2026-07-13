@@ -78,6 +78,7 @@
                 <i class="fa-brands fa-google text-red-400 text-base"></i>
                 <span>Sign in with Google Account</span>
             </button>
+            <p class="text-[11px] text-gray-500 mt-4 leading-relaxed">Authorized family accounts will pass through automatically.</p>
         </div>
     </div>
 
@@ -139,7 +140,7 @@
         <!-- Toolbar & Control Pillars -->
         <div class="flex items-center flex-wrap gap-3">
             <!-- Global Mode Control -->
-            <div class="bg-[#1c2333] border border-gray-800 p-1 rounded-xl flex items-center">
+            <div id="role-toggle-container" class="bg-[#1c2333] border border-gray-800 p-1 rounded-xl hidden items-center">
                 <button id="btn-mode-admin" onclick="switchUserRole('admin')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md">
                     <i class="fa-solid fa-user-gear"></i>
                     <span>Admin View</span>
@@ -401,8 +402,8 @@
                 <div class="space-y-3">
                     <div>
                         <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Firebase Configuration Object</label>
-                        <textarea id="firebase-config-input" placeholder="const firebaseConfig = { ... };" 
-                                  class="w-full h-32 bg-[#0b0f19] border border-gray-800 p-3 text-xs font-mono text-emerald-400 placeholder-gray-600 focus:outline-none resize-none"></textarea>
+                        <textarea id="firebase-config-input" placeholder="const firebaseConfig = { apiKey: '...', authDomain: '...', projectId: '...', storageBucket: '...', messagingSenderId: '...', appId: '...' };" 
+                                  class="w-full h-32 bg-[#0b0f19] border border-gray-800 p-3 text-xs font-mono text-emerald-400 placeholder-gray-600 focus:outline-none resize-none rounded-xl"></textarea>
                     </div>
                 </div>
             </div>
@@ -470,7 +471,11 @@
     <div id="toast-container" class="fixed bottom-6 right-6 space-y-2 z-[100] pointer-events-none"></div>
 
     <!-- CORE SCRIPTS & SECURE HANDLERS -->
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         /* DATABASE STATE DICTIONARIES */
         window.userRole = 'viewer'; // Default to viewer on fresh boot
         window.currentTicker = 'BTCUSD';
@@ -483,10 +488,17 @@
             rsi: false
         };
 
+        // Firebase Sync Engines
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+        let unsubscribeSync = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'brannon-trades';
+
         // Twelve Data API Storage Key
         window.marketApiKey = '';
 
-        // Master Authorized Lists (Secured locally for simulate runtimes)
+        // Master Authorized Lists
         window.systemWhitelist = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
         window.masterPasscode = 'SmithFamilyCode';
 
@@ -950,7 +962,7 @@
         }
 
         function handleMouseDown(e) {
-            if (userRole !== 'admin' || drawingTool !== 'trendline') return;
+            if (window.userRole !== 'admin' || drawingTool !== 'trendline') return;
             
             const rect = e.target.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -1002,6 +1014,7 @@
                 
                 tickerDatabase[currentTicker].drawings.push(completeLine);
                 saveNotesToMemory();
+                publishTickerToCloud(currentTicker);
                 showToast('Line Locked', 'New trend coordinate saved to cloud!', 'success');
             }
             
@@ -1011,16 +1024,18 @@
         }
 
         function clearDrawings() {
-            if (userRole !== 'admin') return;
+            if (window.userRole !== 'admin') return;
             tickerDatabase[currentTicker].drawings = [];
             saveNotesToMemory();
+            publishTickerToCloud(currentTicker);
             renderMasterCharts();
             showToast('Canvas Cleared', 'Trendline coordinates purged.', 'info');
         }
 
         function switchUserRole(role) {
-            // STRICT GATE: Prevent unauthorized toggle attempts to Admin role
             const currentSession = document.getElementById('session-badge-text').textContent.trim().toLowerCase();
+            
+            // STRICT GATE: Only peter.brannon@gmail.com can ever use Admin features
             if (role === 'admin' && currentSession !== 'peter.brannon@gmail.com') {
                 showToast('Access Denied', 'Only peter.brannon@gmail.com is authorized to enter Admin View.', 'error');
                 return;
@@ -1034,9 +1049,15 @@
             
             // Only expose role toggles to the admin
             if (currentSession === 'peter.brannon@gmail.com') {
-                if (roleContainer) roleContainer.classList.remove('hidden');
+                if (roleContainer) {
+                    roleContainer.classList.remove('hidden');
+                    roleContainer.classList.add('flex');
+                }
             } else {
-                if (roleContainer) roleContainer.classList.add('hidden');
+                if (roleContainer) {
+                    roleContainer.classList.remove('flex');
+                    roleContainer.classList.add('hidden');
+                }
             }
             
             if (role === 'admin') {
@@ -1161,6 +1182,7 @@
                     
                     tickerDatabase[currentTicker].screenshot = compressedBase64;
                     saveNotesToMemory();
+                    publishTickerToCloud(currentTicker);
                     loadActiveTickerNotes();
                     showToast('Image Linked', 'Compressed & attached screenshot!', 'success');
                 };
@@ -1173,6 +1195,7 @@
             if (event) event.stopPropagation();
             tickerDatabase[currentTicker].screenshot = '';
             saveNotesToMemory();
+            publishTickerToCloud(currentTicker);
             loadActiveTickerNotes();
             showToast('Image Purged', 'Reference snapshot removed.', 'info');
         }
@@ -1181,6 +1204,7 @@
             const val = document.getElementById('notes-textarea').value;
             tickerDatabase[currentTicker].notes = val;
             saveNotesToMemory();
+            publishTickerToCloud(currentTicker);
         }
 
         function loadActiveTickerNotes() {
@@ -1202,7 +1226,7 @@
             } else {
                 attachedImg.src = '';
                 displayBox.classList.add('hidden');
-                if (userRole === 'admin') {
+                if (window.userRole === 'admin') {
                     editBox.classList.remove('hidden');
                 }
             }
@@ -1281,14 +1305,21 @@
                     </div>
                     <div class="flex items-center space-x-3">
                         <span class="text-xs font-bold text-gray-200">${priceStr}</span>
-                        ${userRole === 'admin' ? `
-                            <button onclick="handleDeleteTicker(event, '${sym}')" class="text-gray-500 hover:text-red-400 text-xs w-6 h-6 flex items-center justify-center rounded bg-gray-850 hover:bg-red-500/10 transition-all">
+                        ${window.userRole === 'admin' ? `
+                            <button id="del-${sym}" class="text-gray-500 hover:text-red-400 text-xs w-6 h-6 flex items-center justify-center rounded bg-gray-850 hover:bg-red-500/10 transition-all">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         ` : ''}
                     </div>
                 `;
                 container.appendChild(card);
+
+                // Add deletion listeners dynamically inside standard element callbacks
+                if (window.userRole === 'admin') {
+                    document.getElementById(`del-${sym}`).addEventListener('click', (e) => {
+                        handleDeleteTicker(e, sym);
+                    });
+                }
             });
         }
 
@@ -1310,6 +1341,7 @@
                 };
 
                 saveNotesToMemory();
+                publishTickerToCloud(val);
                 selectTicker(val);
                 input.value = '';
                 showToast('Asset Bootstrapped', `Added ${val} alongside computed indicator panels!`, 'success');
@@ -1328,6 +1360,7 @@
             delete tickerDatabase[sym];
             delete window.activeTickerData[sym];
             saveNotesToMemory();
+            publishTickerToCloud(sym); // This will clear the remote database node matching this document ID
 
             if (currentTicker === sym) {
                 const remaining = Object.keys(tickerDatabase);
@@ -1355,7 +1388,6 @@
 
         function closeGoogleSignInModal() {
             document.getElementById('google-signin-modal').classList.add('hidden');
-            // Reset modal validation errors on close
             document.getElementById('google-signin-error').classList.add('hidden');
         }
 
@@ -1396,6 +1428,93 @@
             showToast('Session Locked', 'Logged out of active dashboard session.', 'info');
         }
 
+        // Firebase Cloud Integration Engines
+        async function initFirebase(config) {
+            try {
+                const app = initializeApp(config);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Authenticate before queries (Rule 3)
+                let userCredential;
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    userCredential = await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    userCredential = await signInAnonymously(auth);
+                }
+                currentUser = userCredential.user;
+
+                // Setup snapshot listener
+                setupRealtimeSync();
+                return true;
+            } catch (err) {
+                console.error("Firebase init failed:", err);
+                return false;
+            }
+        }
+
+        function setupRealtimeSync() {
+            if (!db || !currentUser) return;
+            if (unsubscribeSync) unsubscribeSync();
+
+            // Strict collection path matching RULE 1
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'tickers');
+
+            // onSnapshot with custom success and error callbacks (Mandatory Rule)
+            unsubscribeSync = onSnapshot(colRef, (snapshot) => {
+                snapshot.forEach((doc) => {
+                    const sym = doc.id;
+                    const data = doc.data();
+                    if (tickerDatabase[sym]) {
+                        tickerDatabase[sym].drawings = data.drawings || [];
+                        tickerDatabase[sym].notes = data.notes || '';
+                        tickerDatabase[sym].screenshot = data.screenshot || '';
+                    } else {
+                        tickerDatabase[sym] = {
+                            drawings: data.drawings || [],
+                            notes: data.notes || '',
+                            screenshot: data.screenshot || ''
+                        };
+                        if (!window.activeTickerData[sym]) {
+                            window.activeTickerData[sym] = {
+                                intraday: generateIntradayData(sym),
+                                historical: generateHistoricalData(sym, 300)
+                            };
+                        }
+                    }
+                });
+                renderWatchlist();
+                loadActiveTickerNotes();
+                renderMasterCharts();
+            }, (error) => {
+                console.error("Firebase sync sync error: ", error);
+                showToast("Connection Failure", "Realtime cloud database sync interrupted.", "error");
+            });
+        }
+
+        async function publishTickerToCloud(sym) {
+            if (!db || !currentUser) return;
+            try {
+                // Strict document path matching RULE 1
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'tickers', sym);
+                const data = tickerDatabase[sym];
+                
+                if (!data) {
+                    // Document deleted locally, delete on Firestore as well
+                    await setDoc(docRef, {});
+                    return;
+                }
+
+                await setDoc(docRef, {
+                    drawings: data.drawings || [],
+                    notes: data.notes || '',
+                    screenshot: data.screenshot || ''
+                }, { merge: true });
+            } catch (err) {
+                console.error("Firestore publish failed:", err);
+            }
+        }
+
         function saveNotesToMemory() {
             localStorage.setItem('brannon_ticker_db', JSON.stringify(tickerDatabase));
         }
@@ -1410,11 +1529,18 @@
             }
         }
 
-        function triggerCloudPublish() {
-            showToast('Publishing...', 'Uploading drawings, screens, and strategies to cloud...', 'info');
-            setTimeout(() => {
+        async function triggerCloudPublish() {
+            if (!db || !currentUser) {
+                showToast('Publish Bypass', 'Saved changes to local browser memory cache.', 'info');
+                return;
+            }
+            showToast('Syncing Cloud...', 'Uploading configurations and analyses to nodes...', 'info');
+            try {
+                await publishTickerToCloud(currentTicker);
                 showToast('Nodes Synced', 'Successfully updated family endpoints!', 'success');
-            }, 1200);
+            } catch (err) {
+                showToast('Sync Failed', err.message, 'error');
+            }
         }
 
         function openConfigModal() {
@@ -1480,9 +1606,10 @@
                     tag.className = "inline-flex items-center space-x-1.5 px-2.5 py-1 bg-[#111827] border border-gray-800 text-xs text-gray-300 rounded-lg";
                     tag.innerHTML = `
                         <span>${email}</span>
-                        <button onclick="removeFromWhitelist('${email}')" class="text-gray-500 hover:text-red-400 text-[10px]"><i class="fa-solid fa-x"></i></button>
+                        <button id="rem-modal-${email}" class="text-gray-500 hover:text-red-400 text-[10px]"><i class="fa-solid fa-x"></i></button>
                     `;
                     modalContainer.appendChild(tag);
+                    document.getElementById(`rem-modal-${email}`).addEventListener('click', () => removeFromWhitelist(email));
                 });
             }
 
@@ -1495,16 +1622,35 @@
                     row.className = "flex justify-between items-center bg-[#0b0f19] border border-gray-800 px-3 py-2 rounded-xl text-xs text-gray-300";
                     row.innerHTML = `
                         <span class="font-medium truncate"><i class="fa-regular fa-envelope text-gray-500 mr-2"></i>${email}</span>
-                        <button onclick="removeFromWhitelist('${email}')" class="text-gray-500 hover:text-red-400 hover:bg-red-500/10 p-1 rounded transition-all">
+                        <button id="rem-main-${email}" class="text-gray-500 hover:text-red-400 hover:bg-red-500/10 p-1 rounded transition-all">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     `;
                     mainContainer.appendChild(row);
+                    document.getElementById(`rem-main-${email}`).addEventListener('click', () => removeFromWhitelist(email));
                 });
             }
         }
 
-        function applyConfiguration() {
+        function parseFirebaseConfig(rawInput) {
+            let cleaned = rawInput.trim();
+            // Remove JS variable declarations if pasted
+            cleaned = cleaned.replace(/^(const|let|var)\s+firebaseConfig\s*=\s*/, '');
+            cleaned = cleaned.replace(/;$/, '');
+            try {
+                return JSON.parse(cleaned);
+            } catch (e) {
+                try {
+                    // Safe execution constructor to sanitize sloppy JS object notation inside code sandbox
+                    return (new Function(`return ${cleaned}`))();
+                } catch (err) {
+                    console.error("Config parsing failure:", err);
+                    return null;
+                }
+            }
+        }
+
+        async function applyConfiguration() {
             const masterPass = document.getElementById('config-passcode').value;
             window.masterPasscode = masterPass;
             
@@ -1512,15 +1658,28 @@
             window.marketApiKey = apiKey;
             localStorage.setItem('brannon_market_api_key', apiKey);
 
-            const hasFirebaseKeys = document.getElementById('firebase-config-input').value.includes('apiKey');
+            const firebaseInput = document.getElementById('firebase-config-input').value.trim();
             const pill = document.getElementById('cloud-pill');
             const text = document.getElementById('cloud-pill-text');
 
-            if (hasFirebaseKeys) {
-                pill.className = "bg-emerald-500/10 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2";
-                text.textContent = "Cloud Sync Active";
-                showToast('Firebase Configured', 'Secure Google Firestore connection online!', 'success');
+            if (firebaseInput) {
+                const parsedConfig = parseFirebaseConfig(firebaseInput);
+                if (parsedConfig && parsedConfig.apiKey) {
+                    localStorage.setItem('brannon_firebase_config', JSON.stringify(parsedConfig));
+                    const connected = await initFirebase(parsedConfig);
+                    
+                    if (connected) {
+                        pill.className = "bg-emerald-500/10 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2";
+                        text.textContent = "Cloud Sync Active";
+                        showToast('Firebase Online', 'Real-time Firestore sync connected!', 'success');
+                    } else {
+                        showToast('Database Error', 'Authentication handshakes failed.', 'error');
+                    }
+                } else {
+                    showToast('Config Error', 'Could not parse Firebase config object syntax.', 'error');
+                }
             } else {
+                localStorage.removeItem('brannon_firebase_config');
                 pill.className = "bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/50 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2";
                 text.textContent = "Offline (Local Cache)";
             }
@@ -1579,9 +1738,38 @@
             }, 3500);
         }
 
+        // Expose modules to inline HTML event targets
+        window.attemptUnlock = attemptUnlock;
+        window.attemptGoogleAuth = attemptGoogleAuth;
+        window.closeGoogleSignInModal = closeGoogleSignInModal;
+        window.submitGoogleAuth = submitGoogleAuth;
+        window.changeTimeframe = changeTimeframe;
+        window.toggleOverlay = toggleOverlay;
+        window.setDrawingTool = setDrawingTool;
+        window.clearDrawings = clearDrawings;
+        window.switchUserRole = switchUserRole;
+        window.handleNotesChange = handleNotesChange;
+        window.handleFileSelect = handleFileSelect;
+        window.clearActiveScreenshot = clearActiveScreenshot;
+        window.selectTicker = selectTicker;
+        window.handleDeleteTicker = handleDeleteTicker;
+        window.handleAddTicker = handleAddTicker;
+        window.addFromMainWhitelist = addFromMainWhitelist;
+        window.removeFromWhitelist = removeFromWhitelist;
+        window.openConfigModal = openConfigModal;
+        window.closeConfigModal = closeConfigModal;
+        window.applyConfiguration = applyConfiguration;
+        window.switchSettingsTab = switchSettingsTab;
+        window.addToWhitelist = addToWhitelist;
+        window.triggerCloudPublish = triggerCloudPublish;
+        window.openLightbox = openLightbox;
+        window.closeLightbox = closeLightbox;
+        window.lockPortal = lockPortal;
+        window.runKeyDiagnosticTest = runKeyDiagnosticTest;
+
         window.onload = function() {
             // SELF-HEALING STATE BOOTSTRAPPER:
-            // Forces all mandated emails into the runtime list, neutralizing legacy localStorage saves
+            // Forcefully patches mandate emails into whitelist database on reload
             const requiredEmails = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
             requiredEmails.forEach(email => {
                 if (!window.systemWhitelist.map(e => e.toLowerCase()).includes(email)) {
@@ -1600,6 +1788,25 @@
             // Default workspace load as viewer until explicit authenticated pass
             switchUserRole('viewer');
             selectTicker('BTCUSD');
+
+            // Autoconnect on reload if config exists
+            const savedFirebase = localStorage.getItem('brannon_firebase_config');
+            if (savedFirebase) {
+                try {
+                    const parsed = JSON.parse(savedFirebase);
+                    document.getElementById('firebase-config-input').value = JSON.stringify(parsed, null, 2);
+                    initFirebase(parsed).then(connected => {
+                        if (connected) {
+                            const pill = document.getElementById('cloud-pill');
+                            const text = document.getElementById('cloud-pill-text');
+                            pill.className = "bg-emerald-500/10 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2";
+                            text.textContent = "Cloud Sync Active";
+                        }
+                    });
+                } catch(err) {
+                    console.error("Auto Firebase hook skipped: ", err);
+                }
+            }
 
             const pc = document.getElementById('price-canvas');
             pc.addEventListener('mousedown', handleMouseDown);
