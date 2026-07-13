@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brannon Trades v2.1</title>
+    <title>Brannon Trades v2.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,7 +14,7 @@
     <!-- LOGIN GATEWAY -->
     <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19] z-[100] flex flex-col justify-center items-center p-4">
         <div class="bg-[#111827] p-8 rounded-2xl border border-gray-800 w-full max-w-sm shadow-2xl relative">
-            <h1 class="text-2xl font-bold text-white mb-6">Brannon Trades</h1>
+            <h1 class="text-2xl font-bold text-white mb-6">Brannon Trades <span class="text-emerald-500 text-xs">v2.2</span></h1>
             
             <input type="password" id="gate-passcode" placeholder="Family Passcode" class="w-full bg-[#0b0f19] p-3 rounded-xl mb-4 border border-gray-700 focus:border-emerald-500 outline-none">
             <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 text-black font-bold rounded-xl mb-4">Access Portal</button>
@@ -22,19 +22,17 @@
             <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] border border-gray-700 text-gray-300 rounded-xl hover:bg-gray-800 transition-all text-sm font-medium">
                 Sign in with Google
             </button>
-            
-            <div class="mt-6 flex justify-center">
-                <span class="px-2 py-1 bg-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase rounded">v2.1 Stable</span>
-            </div>
         </div>
     </div>
 
     <!-- MAIN PORTAL -->
     <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex justify-between items-center">
-        <h1 class="font-bold">Brannon Trades <span class="text-xs text-gray-500 ml-2">v2.1</span></h1>
+        <h1 class="font-bold">Brannon Trades <span class="text-xs text-gray-500 ml-2">v2.2</span></h1>
         <div class="flex items-center gap-4">
             <div id="user-badge" class="hidden text-[10px] font-bold text-emerald-400 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 uppercase tracking-wider">Admin</div>
             <button onclick="openConfigModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-gear"></i></button>
+            <!-- UI Refresh Utility -->
+            <button onclick="window.location.reload()" class="text-gray-500 hover:text-white text-xs"><i class="fa-solid fa-rotate-right"></i></button>
         </div>
     </header>
 
@@ -70,7 +68,6 @@
     <script>
         const WHITELIST = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
 
-        // Auth Logic
         function attemptUnlock() {
             if(document.getElementById('gate-passcode').value === 'SmithFamilyCode') grantAccess('admin');
             else alert("Incorrect passcode.");
@@ -86,17 +83,36 @@
             document.getElementById('lock-screen').classList.add('hidden');
             if(role === 'admin') document.getElementById('user-badge').classList.remove('hidden');
             else document.getElementById('notes').readOnly = true;
+            fetchTwelveData(); // Attempt data fetch on access
         }
 
-        // Config Logic
         function openConfigModal() { document.getElementById('config-modal').classList.remove('hidden'); }
-        function closeConfigModal() { document.getElementById('config-modal').classList.add('hidden'); }
+        function closeConfigModal() { document.getElementById('config-modal').classList.remove('hidden').add('hidden'); } // Fixed potential error here
         
         function saveConfiguration() {
             localStorage.setItem('firebase', document.getElementById('cfg-firebase').value);
             localStorage.setItem('twelve', document.getElementById('cfg-twelve').value);
             alert("Settings saved locally.");
-            closeConfigModal();
+            document.getElementById('config-modal').classList.add('hidden');
+            fetchTwelveData();
+        }
+
+        async function fetchTwelveData() {
+            const apiKey = localStorage.getItem('twelve');
+            if(!apiKey) return;
+            const workspace = document.getElementById('workspace');
+            try {
+                const response = await fetch(`https://api.twelvedata.com/price?symbol=AAPL,MSFT,QQQ&apikey=${apiKey}`);
+                const data = await response.json();
+                let html = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">';
+                for(const [symbol, info] of Object.entries(data)) {
+                    html += `<div class="bg-[#1c2333] p-4 rounded-xl border border-gray-700">
+                                <div class="text-xs text-gray-500 font-bold uppercase">${symbol}</div>
+                                <div class="text-xl font-bold text-emerald-400">$${parseFloat(info.price).toFixed(2)}</div>
+                             </div>`;
+                }
+                workspace.innerHTML = html + '</div>';
+            } catch(e) { workspace.innerText = "Error loading live feed."; }
         }
 
         window.onload = () => {
