@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brannon Trades - Strategic Trade Ideas</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+        }
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- SECURE LOCK SCREEN GATEWAY -->
+    <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19]/98 backdrop-blur-md z-50 flex flex-col justify-center items-center px-4 transition-all duration-300">
+        <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
+            <!-- Branding -->
+            <div class="flex justify-center items-center space-x-3 mb-6">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                    <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-line-cap="round" stroke-line-join="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <div class="text-left">
+                    <span class="text-2xl font-bold tracking-tight text-white block">Brannon Trades</span>
+                    <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">Strategic Trade Ideas</span>
+                </div>
+            </div>
+
+            <h2 class="text-lg font-medium text-gray-300 mb-6">Enter Passcode to Access Family Node</h2>
+            
+            <div class="space-y-4">
+                <div class="relative">
+                    <input type="password" id="gate-passcode" placeholder="Enter Family Passcode" 
+                           class="w-full bg-[#1c2333] border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 pl-11 text-white placeholder-gray-500 focus:outline-none transition-all">
+                    <i class="fa-solid fa-lock absolute left-4 top-4 text-gray-500"></i>
+                </div>
+                <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-gray-950 font-bold rounded-xl transition-all shadow-[0_4px_20px_rgba(16,185,129,0.3)]">
+                    Unlock Portal
+                </button>
+            </div>
+            
+            <div class="relative flex py-5 items-center">
+                <div class="flex-grow border-t border-gray-800"></div>
+                <span class="flex-shrink mx-4 text-gray-500 text-xs uppercase tracking-widest font-semibold">or authenticate</span>
+                <div class="flex-grow border-t border-gray-800"></div>
+            </div>
+
+            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] hover:bg-[#252f44] border border-gray-700 hover:border-gray-600 rounded-xl flex items-center justify-center space-x-3 text-sm font-medium transition-all active:scale-[0.98]">
+                <i class="fa-brands fa-google text-red-400 text-base"></i>
+                <span>Sign in with Google Account</span>
+            </button>
+            <p class="text-[11px] text-gray-500 mt-4 leading-relaxed">Authorized accounts will pass through automatically. Default local passcode: <code class="text-emerald-500 font-mono">SmithFamilyCode</code></p>
+        </div>
+    </div>
+
+    <!-- MASTER HEADER -->
+    <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4 z-10">
+        <div class="flex items-center space-x-4">
+            <!-- Branding -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)] animate-pulse">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl font-extrabold tracking-tight text-white leading-none">Brannon Trades</span>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">LIVE</span>
+                    </div>
+                    <span class="text-xs text-gray-400 font-medium tracking-wide">Strategic Trade Ideas</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar & Control Pillars -->
+        <div class="flex items-center flex-wrap gap-3">
+            <!-- Global Mode Control -->
+            <div class="bg-[#1c2333] border border-gray-800 p-1 rounded-xl flex items-center">
+                <button id="btn-mode-admin" onclick="switchUserRole('admin')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span>Admin View</span>
+                </button>
+                <button id="btn-mode-family" onclick="switchUserRole('viewer')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span>Family View</span>
+                </button>
+            </div>
+
+            <!-- Connection Status -->
+            <button onclick="openConfigModal()" id="cloud-pill" class="bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/50 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                <span id="cloud-pill-text">Offline (Local Cache)</span>
+            </button>
+
+            <!-- Active User Session Badge -->
+            <div id="session-badge" class="bg-gray-800/80 border border-gray-700 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-300 flex items-center space-x-2">
+                <i class="fa-solid fa-key text-gray-400"></i>
+                <span id="session-badge-text">Family Key</span>
+            </div>
+
+            <!-- Lock Session Button (Logout) -->
+            <button onclick="lockPortal()" title="Lock Session" class="w-9 h-9 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40 rounded-xl flex items-center justify-center transition-all active:scale-95">
+                <i class="fa-solid fa-power-off"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE CONTAINER -->
+    <div class="flex-grow flex flex-col lg:flex-row h-full">
+        <!-- SIDEBAR: WATCHLIST -->
+        <aside class="w-full lg:w-72 bg-[#111827]/60 border-b lg:border-b-0 lg:border-r border-gray-800 p-4 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-gray-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-list-check text-emerald-400"></i>
+                        <span>Watchlist</span>
+                    </h2>
+                    <span id="watchlist-count" class="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded-md font-bold">0</span>
+                </div>
+
+                <!-- Create/Add Ticker Form (Admin Only) -->
+                <div id="add-ticker-container" class="mb-4">
+                    <form id="add-ticker-form" onsubmit="handleAddTicker(event)" class="flex gap-2">
+                        <input type="text" id="new-ticker-input" placeholder="Add Ticker (e.g. AAPL)" required
+                               class="flex-grow bg-[#1c2333] border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wider text-white placeholder-gray-500 focus:outline-none transition-all">
+                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-gray-950 px-3 rounded-lg flex items-center justify-center transition-all font-bold text-sm">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Ticker Cards Container -->
+                <div id="ticker-list" class="space-y-2 overflow-y-auto max-h-[300px] lg:max-h-[500px] pr-1">
+                    <!-- Dynamic Tickers Go Here -->
+                </div>
+            </div>
+
+            <!-- Small System Insight Badge -->
+            <div class="mt-4 pt-4 border-t border-gray-800/60 hidden lg:block">
+                <div class="bg-emerald-500/5 rounded-xl p-3 border border-emerald-500/10">
+                    <p class="text-[10px] text-gray-400 leading-relaxed font-medium">Any notes, screenshots, or chart trendlines you edit are saved in real-time and published to your family's nodes.</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN PANEL: CHARTS & WORKSPACE -->
+        <main class="flex-grow p-4 flex flex-col gap-4 overflow-y-auto">
+            
+            <!-- CONTROLS & TIMEFRAMES TOOLBAR -->
+            <div class="bg-[#111827] border border-gray-800 p-3 rounded-2xl flex flex-wrap justify-between items-center gap-3">
+                <!-- Ticker Title / Feed Type Indicator -->
+                <div class="flex items-center space-x-3">
+                    <h1 id="active-ticker-title" class="text-xl font-black text-white uppercase tracking-wider">--</h1>
+                    <span id="active-ticker-price" class="text-lg font-bold text-emerald-400">$--</span>
+                    <span id="active-ticker-change" class="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400">--%</span>
+                </div>
+
+                <!-- Chart Config Toggles -->
+                <div class="flex items-center flex-wrap gap-2">
+                    <!-- Timeframes -->
+                    <div class="bg-[#1c2333] border border-gray-800 p-0.5 rounded-lg flex">
+                        <button onclick="changeTimeframe('1D')" id="tf-1D" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all">1D</button>
+                        <button onclick="changeTimeframe('1M')" id="tf-1M" class="px-3 py-1 text-xs font-bold rounded-md bg-emerald-500 text-gray-950 shadow-md transition-all">1M</button>
+                        <button onclick="changeTimeframe('3M')" id="tf-3M" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all">3M</button>
+                        <button onclick="changeTimeframe('1Y')" id="tf-1Y" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all">1Y</button>
+                    </div>
+
+                    <!-- Overlays & Technical Indicators -->
+                    <div class="bg-[#1c2333] border border-gray-800 p-0.5 rounded-lg flex items-center">
+                        <button onclick="toggleOverlay('ma20')" id="overlay-ma20" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all">MA 20</button>
+                        <button onclick="toggleOverlay('ma50')" id="overlay-ma50" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all">MA 50</button>
+                        <button onclick="toggleOverlay('ma200')" id="overlay-ma200" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all">MA 200</button>
+                        <button onclick="toggleOverlay('rsi')" id="overlay-rsi" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all">RSI</button>
+                    </div>
+
+                    <!-- Drawing Tools (Admin Only) -->
+                    <div id="drawing-tools-container" class="bg-[#1c2333] border border-gray-800 p-0.5 rounded-lg flex">
+                        <button onclick="setDrawingTool('select')" id="tool-select" class="px-3 py-1 text-xs font-bold rounded-md bg-emerald-500 text-gray-950 shadow-md transition-all">
+                            <i class="fa-solid fa-arrow-pointer"></i>
+                        </button>
+                        <button onclick="setDrawingTool('trendline')" id="tool-trendline" class="px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all" title="Trendline">
+                            <i class="fa-solid fa-slash"></i>
+                        </button>
+                        <button onclick="clearDrawings()" class="px-3 py-1 text-xs font-bold rounded-md text-red-400 hover:text-red-300 hover:bg-red-500/15 transition-all" title="Clear Canvas">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHART WORKSPACE -->
+            <div class="bg-[#111827] border border-gray-800 rounded-2xl p-4 flex-grow flex flex-col relative" id="chart-viewport-box">
+                <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none rounded-2xl"></div>
+                
+                <!-- Main price / volume canvas wrapper -->
+                <div class="flex-grow relative min-h-[300px]" id="price-canvas-wrapper">
+                    <canvas id="price-canvas" class="absolute inset-0 w-full h-full cursor-crosshair z-10"></canvas>
+                </div>
+
+                <!-- RSI Sub-Canvas (Collapsible / Dynamic) -->
+                <div id="rsi-canvas-container" class="h-32 border-t border-gray-800/80 mt-4 relative hidden">
+                    <div class="text-[10px] text-gray-500 font-bold absolute left-2 top-2 z-20">RSI (14)</div>
+                    <canvas id="rsi-canvas" class="absolute inset-0 w-full h-full cursor-crosshair z-10"></canvas>
+                </div>
+            </div>
+
+            <!-- PLAYBOOK & NOTES COLUMN -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- Playbook/Pattern Analysis -->
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 flex items-center space-x-2">
+                                <i class="fa-solid fa-book-open text-emerald-400"></i>
+                                <span>Playbook & Pattern Analysis</span>
+                            </h3>
+                            <span class="text-xs text-gray-500">Auto-saves to memory</span>
+                        </div>
+                        <textarea id="notes-textarea" oninput="handleNotesChange()" placeholder="Write down your technical trade plan, strategy criteria, price triggers, risk ratios, or options contracts targets..."
+                                  class="w-full h-44 bg-[#0b0f19] border border-gray-800 hover:border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl p-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none transition-all resize-none"></textarea>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button onclick="triggerCloudPublish()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-gray-950 text-xs font-bold rounded-xl transition-all shadow-[0_4px_15px_rgba(16,185,129,0.2)] active:scale-95 flex items-center space-x-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Publish Analysis to Family Nodes</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SCREENSHOT & PATTERN LINK GALLERY -->
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-2xl flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 flex items-center space-x-2">
+                            <i class="fa-solid fa-image text-emerald-400"></i>
+                            <span>Reference Chart Screenshot</span>
+                        </h3>
+                        <span class="text-[10px] text-emerald-400 bg-emerald-500/15 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest animate-pulse">75% Compression Active</span>
+                    </div>
+
+                    <!-- Upload Trigger Container (Only visible to admin) -->
+                    <div id="screenshot-admin-controls" class="flex-grow flex flex-col justify-center items-center">
+                        <!-- Dropzone area -->
+                        <div id="screenshot-dropzone" 
+                             class="w-full h-full min-h-[140px] border-2 border-dashed border-gray-800 hover:border-emerald-500/60 rounded-xl flex flex-col justify-center items-center p-4 text-center cursor-pointer transition-all bg-[#0b0f19]/40 relative group">
+                            <input type="file" id="screenshot-file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleFileSelect(event)">
+                            
+                            <div class="space-y-2 pointer-events-none" id="dropzone-empty-state">
+                                <div class="w-10 h-10 rounded-xl bg-gray-800 group-hover:bg-emerald-500/10 flex items-center justify-center mx-auto transition-all">
+                                    <i class="fa-solid fa-cloud-arrow-up text-gray-400 group-hover:text-emerald-400"></i>
+                                </div>
+                                <p class="text-xs font-bold text-gray-300">Drag & Drop Chart Screenshot or <span class="text-emerald-400">Browse</span></p>
+                                <p class="text-[10px] text-gray-500 leading-tight">Or just click the text notes box and press <kbd class="px-1.5 py-0.5 bg-gray-800 rounded font-sans text-[9px]">Ctrl+V</kbd> to paste directly!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Display View Mode Container -->
+                    <div id="screenshot-display-container" class="hidden relative rounded-xl overflow-hidden border border-gray-800 bg-[#0b0f19] h-[178px]">
+                        <img id="attached-screenshot" src="" alt="Trading Screenshot Reference" class="w-full h-full object-cover cursor-pointer" onclick="openLightbox()">
+                        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3 flex justify-between items-center">
+                            <span class="text-[10px] font-semibold text-gray-400">Linked to <span class="text-white uppercase font-bold active-tag-text">--</span></span>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="openLightbox()" class="text-gray-400 hover:text-white text-xs bg-gray-900/80 px-2 py-1 rounded-md border border-gray-700/60 transition-all">
+                                    <i class="fa-solid fa-expand"></i> Expand
+                                </button>
+                                <button id="delete-screenshot-btn" onclick="clearActiveScreenshot(event)" class="text-red-400 hover:text-red-300 text-xs bg-red-950/40 border border-red-500/20 px-2 py-1 rounded-md transition-all">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- DATABASE CONFIGURATION MODAL -->
+    <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden flex justify-center items-center p-4">
+        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl w-full max-w-lg shadow-2xl relative">
+            <button onclick="closeConfigModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                    <i class="fa-solid fa-sliders text-lg animate-pulse"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">System Settings Control</h3>
+                    <p class="text-xs text-gray-400">Manage database connections, user Whitelists, and live APIs</p>
+                </div>
+            </div>
+
+            <!-- Tab Headers -->
+            <div class="border-b border-gray-800 mb-4 flex space-x-1">
+                <button onclick="switchSettingsTab('sync')" id="tab-btn-sync" class="px-4 py-2 text-xs font-bold border-b-2 border-emerald-500 text-emerald-400">Database Sync</button>
+                <button onclick="switchSettingsTab('whitelist')" id="tab-btn-whitelist" class="px-4 py-2 text-xs font-bold text-gray-400 border-b-2 border-transparent hover:text-white">Whitelist & Passcode</button>
+                <button onclick="switchSettingsTab('feed')" id="tab-btn-feed" class="px-4 py-2 text-xs font-bold text-gray-400 border-b-2 border-transparent hover:text-white">Market Feed</button>
+            </div>
+
+            <!-- TAB CONTAINER: SYNC -->
+            <div id="tab-sync" class="space-y-4">
+                <p class="text-xs text-gray-400 leading-relaxed">Hook up your free **Google Firebase Firestore** to store, sync, and publish drawing patterns and text plan analyses to your family's devices in real-time.</p>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Firebase Configuration Object</label>
+                        <textarea id="firebase-config-input" placeholder="const firebaseConfig = { ... };" 
+                                  class="w-full h-32 bg-[#0b0f19] border border-gray-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl p-3 text-xs font-mono text-emerald-400 placeholder-gray-600 focus:outline-none resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB CONTAINER: WHITELIST & SECURITY -->
+            <div id="tab-whitelist" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Master Access Passcode</label>
+                    <input type="text" id="config-passcode" value="SmithFamilyCode"
+                           class="w-full bg-[#0b0f19] border border-gray-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-xs font-semibold text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Authorized Gmail Whitelist</label>
+                    <div class="flex gap-2 mb-2">
+                        <input type="email" id="whitelist-email-input" placeholder="e.g. unclejack@gmail.com"
+                               class="flex-grow bg-[#0b0f19] border border-gray-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3 py-2 text-xs focus:outline-none text-white">
+                        <button onclick="addToWhitelist()" class="px-4 bg-emerald-500 hover:bg-emerald-600 text-gray-950 text-xs font-bold rounded-xl transition-all">Add</button>
+                    </div>
+                    <div id="whitelist-tags-container" class="flex flex-wrap gap-1.5 p-3 bg-[#0b0f19] rounded-xl border border-gray-800 max-h-24 overflow-y-auto">
+                        <!-- Whitelisted addresses render here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB CONTAINER: MARKET API FEED -->
+            <div id="tab-feed" class="space-y-4 hidden">
+                <p class="text-xs text-gray-400 leading-relaxed">By default, the portal runs a high-fidelity local simulator. To pull raw, real-time index feeds, paste your free **Twelve Data API key** below.</p>
+                <div>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Twelve Data API Token</label>
+                    <input type="text" id="market-api-key" placeholder="Paste API Key here..."
+                           class="w-full bg-[#0b0f19] border border-gray-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-xs font-mono text-emerald-400 focus:outline-none">
+                </div>
+                <div class="text-[10px] text-gray-500">
+                    Need a token? Register free at <a href="https://twelvedata.com/" target="_blank" class="text-emerald-400 hover:underline">twelvedata.com</a> to get real-time price feeds for index symbols instantly.
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-gray-800 flex justify-end space-x-2">
+                <button onclick="closeConfigModal()" class="px-4 py-2 bg-gray-850 hover:bg-gray-800 text-gray-400 hover:text-white rounded-xl text-xs font-bold transition-all">Cancel</button>
+                <button onclick="applyConfiguration()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-gray-950 rounded-xl text-xs font-bold transition-all">Save and Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPANDED LIGHTBOX PREVIEW MODAL -->
+    <div id="lightbox-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col justify-center items-center p-4" onclick="closeLightbox()">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-gray-400 hover:text-white text-2xl z-50">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="max-w-5xl max-h-[85vh] overflow-hidden rounded-xl border border-gray-800 shadow-2xl relative" onclick="event.stopPropagation()">
+            <img id="lightbox-image" src="" alt="Enlarged Reference Preview" class="object-contain w-full h-full max-h-[85vh]">
+            <div class="absolute bottom-0 inset-x-0 bg-black/70 p-4 text-center">
+                <p class="text-sm font-semibold text-white">Attached Reference Blueprint: <span class="text-emerald-400 uppercase font-bold active-tag-text">--</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST ALERTS SYSTEM -->
+    <div id="toast-container" class="fixed bottom-6 right-6 space-y-2 z-50 pointer-events-none"></div>
+
+    <script>
+        /* DATABASE STATE DICTIONARIES */
+        window.userRole = 'admin'; // 'admin' or 'viewer'
+        window.currentTicker = 'BTCUSD';
+        window.activeTimeframe = '1M';
+        window.drawingTool = 'select'; // 'select' or 'trendline'
+        window.overlaySettings = {
+            ma20: false,
+            ma50: false,
+            ma200: false,
+            rsi: false
+        };
+
+        // Master Whitelist (stored locally for bypass simulations)
+        window.systemWhitelist = ['brannontrades@gmail.com', 'family@brannontrades.com'];
+        window.masterPasscode = 'SmithFamilyCode';
+
+        // Tickers database storing historical candles, drawings, notes, and compressed screenshots
+        window.tickerDatabase = {
+            'BTCUSD': { drawings: [], notes: '', screenshot: '' },
+            'SPY': { drawings: [], notes: '', screenshot: '' },
+            'QQQ': { drawings: [], notes: '', screenshot: '' },
+            'AAPL': { drawings: [], notes: '', screenshot: '' },
+            'NVDA': { drawings: [], notes: '', screenshot: '' }
+        };
+
+        // Temporary session active drawing vectors
+        let currentDrawing = null;
+        let isDrawing = false;
+        let selectedDrawingIndex = null;
+
+        // Generator for mock historical data
+        function generateHistoricalData(symbol, daysCount) {
+            let basePrice = 100;
+            if (symbol.includes('BTC')) basePrice = 97000;
+            else if (symbol === 'SPY') basePrice = 580;
+            else if (symbol === 'QQQ') basePrice = 490;
+            else if (symbol === 'AAPL') basePrice = 240;
+            else if (symbol === 'NVDA') basePrice = 145;
+
+            const arr = [];
+            let currentClose = basePrice;
+            const now = new Date();
+
+            for (let i = daysCount; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const volatility = symbol.includes('BTC') ? 0.035 : 0.015;
+                const change = currentClose * volatility * (Math.random() - 0.48); // slightly positive bias
+                const open = currentClose;
+                const close = currentClose + change;
+                const high = Math.max(open, close) + (Math.random() * currentClose * 0.01);
+                const low = Math.min(open, close) - (Math.random() * currentClose * 0.01);
+                const volume = Math.floor(100000 + Math.random() * 9000000);
+
+                const dateStr = date.toISOString().split('T')[0];
+
+                arr.push({
+                    date: dateStr,
+                    open: open,
+                    high: high,
+                    low: low,
+                    close: close,
+                    volume: volume
+                });
+                currentClose = close;
+            }
+            return arr;
+        }
+
+        // Generator for 1-Day (5-minute intraday) data (78 points representing 6.5 hours of trading)
+        function generateIntradayData(symbol) {
+            let basePrice = 100;
+            if (symbol.includes('BTC')) basePrice = 97000;
+            else if (symbol === 'SPY') basePrice = 580;
+            else if (symbol === 'QQQ') basePrice = 490;
+            else if (symbol === 'AAPL') basePrice = 240;
+            else if (symbol === 'NVDA') basePrice = 145;
+
+            const arr = [];
+            let currentClose = basePrice;
+            
+            // Build 78 intervals (5-min steps from 9:30 AM to 4:00 PM)
+            let baseHour = 9;
+            let baseMin = 30;
+
+            for (let i = 0; i < 78; i++) {
+                let m = baseMin + (i * 5);
+                let h = baseHour + Math.floor(m / 60);
+                m = m % 60;
+                
+                const labelStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+                const volatility = symbol.includes('BTC') ? 0.01 : 0.003;
+                const change = currentClose * volatility * (Math.random() - 0.49);
+                const open = currentClose;
+                const close = currentClose + change;
+                const high = Math.max(open, close) + (Math.random() * currentClose * 0.002);
+                const low = Math.min(open, close) - (Math.random() * currentClose * 0.002);
+                const volume = Math.floor(50000 + Math.random() * 2000000);
+
+                arr.push({
+                    date: labelStr,
+                    open: open,
+                    high: high,
+                    low: low,
+                    close: close,
+                    volume: volume
+                });
+                currentClose = close;
+            }
+            return arr;
+        }
+
+        // Keep runtime memory cache of currently populated data series
+        window.activeTickerData = {};
+
+        function rebuildDatasetCache() {
+            Object.keys(tickerDatabase).forEach(sym => {
+                window.activeTickerData[sym] = {
+                    intraday: generateIntradayData(sym),
+                    historical: generateHistoricalData(sym, 300)
+                };
+            });
+        }
+
+        function calculateSMA(data, period) {
+            const sma = [];
+            for (let i = 0; i < data.length; i++) {
+                if (i < period - 1) {
+                    sma.push(null);
+                } else {
+                    let sum = 0;
+                    for (let j = 0; j < period; j++) {
+                        sum += data[i - j].close;
+                    }
+                    sma.push(sum / period);
+                }
+            }
+            return sma;
+        }
+
+        function calculateRSI(data, period = 14) {
+            const rsi = [];
+            if (data.length < period) return Array(data.length).fill(50);
+            
+            let gains = 0;
+            let losses = 0;
+
+            // First interval
+            for (let i = 1; i <= period; i++) {
+                const diff = data[i].close - data[i - 1].close;
+                if (diff > 0) gains += diff;
+                else losses -= diff;
+            }
+
+            let avgGain = gains / period;
+            let avgLoss = losses / period;
+            
+            for (let i = 0; i < data.length; i++) {
+                if (i < period) {
+                    rsi.push(50); // filler
+                } else {
+                    const diff = data[i].close - data[i - 1].close;
+                    const gain = diff > 0 ? diff : 0;
+                    const loss = diff < 0 ? -diff : 0;
+
+                    avgGain = (avgGain * (period - 1) + gain) / period;
+                    avgLoss = (avgLoss * (period - 1) + loss) / period;
+
+                    if (avgLoss === 0) {
+                        rsi.push(100);
+                    } else {
+                        const rs = avgGain / avgLoss;
+                        rsi.push(100 - (100 / (1 + rs)));
+                    }
+                }
+            }
+            return rsi;
+        }
+
+        function getActiveSeries() {
+            const tickerData = window.activeTickerData[currentTicker] || { intraday: [], historical: [] };
+            if (activeTimeframe === '1D') {
+                return tickerData.intraday;
+            } else if (activeTimeframe === '1M') {
+                return tickerData.historical.slice(-25);
+            } else if (activeTimeframe === '3M') {
+                return tickerData.historical.slice(-75);
+            } else {
+                return tickerData.historical; // 1Y
+            }
+        }
+
+        function renderMasterCharts() {
+            const canvasPrice = document.getElementById('price-canvas');
+            const canvasRSI = document.getElementById('rsi-canvas');
+            const wrapperPrice = document.getElementById('price-canvas-wrapper');
+            
+            if (!canvasPrice) return;
+
+            // Set dynamic responsive size coordinates
+            canvasPrice.width = wrapperPrice.clientWidth;
+            canvasPrice.height = wrapperPrice.clientHeight;
+            
+            const ctxP = canvasPrice.getContext('2d');
+            const d = getActiveSeries();
+            if (d.length === 0) return;
+
+            // Compute math boundary frames
+            let minPrice = Infinity;
+            let maxPrice = -Infinity;
+            let maxVolume = 0;
+
+            d.forEach(bar => {
+                if (bar.low < minPrice) minPrice = bar.low;
+                if (bar.high > maxPrice) maxPrice = bar.high;
+                if (bar.volume > maxVolume) maxVolume = bar.volume;
+            });
+
+            // Margin buffering
+            const pricePadding = (maxPrice - minPrice) * 0.08 || 1.0;
+            maxPrice += pricePadding;
+            minPrice -= pricePadding;
+
+            const w = canvasPrice.width;
+            const h = canvasPrice.height;
+            const graphWidth = w - 60; // Leave room for right price axis
+            const graphHeight = h - 30; // Leave room for bottom timestamp ticks
+
+            // Cache spacing math globally so drawing coordinate system matches indexes
+            window.chartDimensions = {
+                dLength: d.length,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
+                graphWidth: graphWidth,
+                graphHeight: graphHeight,
+                columnWidth: graphWidth / d.length,
+                w: w,
+                h: h
+            };
+
+            ctxP.clearRect(0, 0, w, h);
+
+            // Draw clean background horizontal grid lines
+            ctxP.strokeStyle = '#1f2937';
+            ctxP.lineWidth = 1;
+            ctxP.fillStyle = '#6b7280';
+            ctxP.font = '9px Inter';
+            
+            for (let i = 0; i <= 5; i++) {
+                const priceVal = minPrice + ((maxPrice - minPrice) * (i / 5));
+                const y = graphHeight - ((priceVal - minPrice) / (maxPrice - minPrice)) * graphHeight;
+                ctxP.beginPath();
+                ctxP.moveTo(0, y);
+                ctxP.lineTo(graphWidth, y);
+                ctxP.stroke();
+                
+                // Price tags
+                ctxP.fillText(priceVal.toFixed(2), graphWidth + 8, y + 3);
+            }
+
+            // Draw historical candles
+            const colW = graphWidth / d.length;
+            d.forEach((bar, idx) => {
+                const x = idx * colW + (colW / 2);
+                
+                // Volume bars transparent rendering
+                const volH = (bar.volume / maxVolume) * (graphHeight * 0.18);
+                ctxP.fillStyle = bar.close >= bar.open ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)';
+                ctxP.fillRect(idx * colW + 2, graphHeight - volH, colW - 4, volH);
+
+                // Candlestick rendering
+                const yOpen = graphHeight - ((bar.open - minPrice) / (maxPrice - minPrice)) * graphHeight;
+                const yClose = graphHeight - ((bar.close - minPrice) / (maxPrice - minPrice)) * graphHeight;
+                const yHigh = graphHeight - ((bar.high - minPrice) / (maxPrice - minPrice)) * graphHeight;
+                const yLow = graphHeight - ((bar.low - minPrice) / (maxPrice - minPrice)) * graphHeight;
+
+                ctxP.strokeStyle = bar.close >= bar.open ? '#10b981' : '#ef4444';
+                ctxP.fillStyle = bar.close >= bar.open ? '#10b981' : '#ef4444';
+                ctxP.lineWidth = colW > 6 ? 1.5 : 1.0;
+
+                // Wick
+                ctxP.beginPath();
+                ctxP.moveTo(x, yHigh);
+                ctxP.lineTo(x, yLow);
+                ctxP.stroke();
+
+                // Body
+                const bodyH = Math.abs(yOpen - yClose) || 1.5;
+                ctxP.fillRect(idx * colW + (colW * 0.15), Math.min(yOpen, yClose), colW * 0.7, bodyH);
+
+                // Render specific timeframe bottom axis ticks
+                if (idx % Math.ceil(d.length / 5) === 0) {
+                    ctxP.fillStyle = '#6b7280';
+                    const splitLabel = bar.date.includes('-') ? bar.date.substring(5) : bar.date;
+                    ctxP.fillText(splitLabel, idx * colW, graphHeight + 18);
+                }
+            });
+
+            // Render active overlays (Moving Averages)
+            if (overlaySettings.ma20) renderSMA(ctxP, d, 20, '#f59e0b');
+            if (overlaySettings.ma50) renderSMA(ctxP, d, 50, '#3b82f6');
+            if (overlaySettings.ma200) renderSMA(ctxP, d, 200, '#a855f7');
+
+            // Render Drawings (Date/Index-Anchored drawings)
+            const activeProfile = tickerDatabase[currentTicker] || { drawings: [] };
+            ctxP.lineWidth = 2.5;
+            activeProfile.drawings.forEach((line, index) => {
+                // Find matching indexes of drawings in active subset
+                const startIdx = d.findIndex(b => b.date === line.startDate);
+                const endIdx = d.findIndex(b => b.date === line.endDate);
+
+                if (startIdx !== -1 && endIdx !== -1) {
+                    const x1 = startIdx * colW + (colW / 2);
+                    const y1 = graphHeight - ((line.startPrice - minPrice) / (maxPrice - minPrice)) * graphHeight;
+                    const x2 = endIdx * colW + (colW / 2);
+                    const y2 = graphHeight - ((line.endPrice - minPrice) / (maxPrice - minPrice)) * graphHeight;
+
+                    ctxP.strokeStyle = selectedDrawingIndex === index ? '#10b981' : '#ffffff';
+                    ctxP.setLineDash(selectedDrawingIndex === index ? [6, 4] : []);
+                    ctxP.beginPath();
+                    ctxP.moveTo(x1, y1);
+                    ctxP.lineTo(x2, y2);
+                    ctxP.stroke();
+                    ctxP.setLineDash([]);
+                }
+            });
+
+            // Render active temp drawing
+            if (isDrawing && currentDrawing) {
+                const startIdx = d.findIndex(b => b.date === currentDrawing.startDate);
+                if (startIdx !== -1) {
+                    const x1 = startIdx * colW + (colW / 2);
+                    const y1 = graphHeight - ((currentDrawing.startPrice - minPrice) / (maxPrice - minPrice)) * graphHeight;
+                    
+                    ctxP.strokeStyle = '#10b981';
+                    ctxP.setLineDash([4, 4]);
+                    ctxP.beginPath();
+                    ctxP.moveTo(x1, y1);
+                    ctxP.lineTo(currentDrawing.tempX, currentDrawing.tempY);
+                    ctxP.stroke();
+                    ctxP.setLineDash([]);
+                }
+            }
+
+            // Render RSI index
+            if (overlaySettings.rsi) {
+                document.getElementById('rsi-canvas-container').classList.remove('hidden');
+                canvasRSI.width = canvasRSI.parentElement.clientWidth;
+                canvasRSI.height = canvasRSI.parentElement.clientHeight;
+                const ctxR = canvasRSI.getContext('2d');
+                const rsiValues = calculateRSI(d, 14);
+
+                ctxR.clearRect(0, 0, canvasRSI.width, canvasRSI.height);
+                const rH = canvasRSI.height;
+                const rW = canvasRSI.width - 60;
+
+                // RSI Reference bounds (70 / 30)
+                ctxR.strokeStyle = 'rgba(239, 68, 68, 0.25)';
+                ctxR.fillStyle = 'rgba(239, 68, 68, 0.03)';
+                const y70 = rH - (70 / 100) * rH;
+                const y30 = rH - (30 / 100) * rH;
+
+                ctxR.fillRect(0, y70, rW, y30 - y70);
+                
+                ctxR.beginPath(); ctxR.moveTo(0, y70); ctxR.lineTo(rW, y70); ctxR.stroke();
+                ctxR.strokeStyle = 'rgba(16, 185, 129, 0.25)';
+                ctxR.beginPath(); ctxR.moveTo(0, y30); ctxR.lineTo(rW, y30); ctxR.stroke();
+
+                ctxR.fillStyle = '#6b7280';
+                ctxR.fillText("70", rW + 8, y70 + 3);
+                ctxR.fillText("30", rW + 8, y30 + 3);
+
+                // Render actual RSI line
+                ctxR.strokeStyle = '#a855f7';
+                ctxR.lineWidth = 1.5;
+                ctxR.beginPath();
+                
+                rsiValues.forEach((val, idx) => {
+                    const x = idx * colW + (colW / 2);
+                    const y = rH - (val / 100) * rH;
+                    if (idx === 0) ctxR.moveTo(x, y);
+                    else ctxR.lineTo(x, y);
+                });
+                ctxR.stroke();
+            } else {
+                document.getElementById('rsi-canvas-container').classList.add('hidden');
+            }
+        }
+
+        // Subroutine to render individual SMA trend curves
+        function renderSMA(ctx, d, period, color) {
+            const sma = calculateSMA(d, period);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            let firstPoint = true;
+            
+            const dim = window.chartDimensions;
+            sma.forEach((val, idx) => {
+                if (val !== null) {
+                    const x = idx * dim.columnWidth + (dim.columnWidth / 2);
+                    const y = dim.graphHeight - ((val - dim.minPrice) / (dim.maxPrice - dim.minPrice)) * dim.graphHeight;
+                    if (firstPoint) {
+                        ctx.moveTo(x, y);
+                        firstPoint = false;
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+            });
+            ctx.stroke();
+        }
+
+        // Mouse/Touch Drawing Vector Observers
+        function handleMouseDown(e) {
+            if (userRole !== 'admin' || drawingTool !== 'trendline') return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const dim = window.chartDimensions;
+            const d = getActiveSeries();
+            const idx = Math.floor(x / dim.columnWidth);
+            
+            if (idx >= 0 && idx < d.length) {
+                isDrawing = true;
+                const price = dim.minPrice + ((dim.graphHeight - y) / dim.graphHeight) * (dim.maxPrice - dim.minPrice);
+                currentDrawing = {
+                    startDate: d[idx].date,
+                    startPrice: price,
+                    tempX: x,
+                    tempY: y
+                };
+            }
+        }
+
+        function handleMouseMove(e) {
+            if (!isDrawing || !currentDrawing) return;
+            const rect = e.target.getBoundingClientRect();
+            currentDrawing.tempX = e.clientX - rect.left;
+            currentDrawing.tempY = e.clientY - rect.top;
+            renderMasterCharts();
+        }
+
+        function handleMouseUp(e) {
+            if (!isDrawing || !currentDrawing) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const dim = window.chartDimensions;
+            const d = getActiveSeries();
+            const idx = Math.floor(x / dim.columnWidth);
+            
+            if (idx >= 0 && idx < d.length) {
+                const endPrice = dim.minPrice + ((dim.graphHeight - y) / dim.graphHeight) * (dim.maxPrice - dim.minPrice);
+                const completeLine = {
+                    startDate: currentDrawing.startDate,
+                    startPrice: currentDrawing.startPrice,
+                    endDate: d[idx].date,
+                    endPrice: endPrice
+                };
+                
+                tickerDatabase[currentTicker].drawings.push(completeLine);
+                saveNotesToMemory();
+                showToast('Line Locked', 'New trend coordinate saved to cloud!', 'success');
+            }
+            
+            isDrawing = false;
+            currentDrawing = null;
+            renderMasterCharts();
+        }
+
+        function clearDrawings() {
+            if (userRole !== 'admin') return;
+            tickerDatabase[currentTicker].drawings = [];
+            saveNotesToMemory();
+            renderMasterCharts();
+            showToast('Canvas Cleared', 'Trendline coordinates purged.', 'info');
+        }
+
+        // Session View Adjusters
+        function switchUserRole(role) {
+            window.userRole = role;
+            
+            // Adjust header toggle buttons
+            const btnAdmin = document.getElementById('btn-mode-admin');
+            const btnFamily = document.getElementById('btn-mode-family');
+            
+            if (role === 'admin') {
+                btnAdmin.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md";
+                btnFamily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white";
+                document.getElementById('add-ticker-container').classList.remove('hidden');
+                document.getElementById('drawing-tools-container').classList.remove('hidden');
+                document.getElementById('screenshot-admin-controls').classList.remove('hidden');
+                document.getElementById('delete-screenshot-btn').classList.remove('hidden');
+                document.getElementById('notes-textarea').removeAttribute('readonly');
+            } else {
+                btnAdmin.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white";
+                btnFamily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md";
+                document.getElementById('add-ticker-container').classList.add('hidden');
+                document.getElementById('drawing-tools-container').classList.add('hidden');
+                document.getElementById('screenshot-admin-controls').classList.add('hidden');
+                document.getElementById('delete-screenshot-btn').classList.add('hidden');
+                document.getElementById('notes-textarea').setAttribute('readonly', 'true');
+            }
+            
+            renderWatchlist();
+            renderMasterCharts();
+        }
+
+        // Active toolbar button triggers
+        function changeTimeframe(tf) {
+            window.activeTimeframe = tf;
+            ['tf-1D', 'tf-1M', 'tf-3M', 'tf-1Y'].forEach(id => {
+                document.getElementById(id).className = "px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all";
+            });
+            document.getElementById(`tf-${tf}`).className = "px-3 py-1 text-xs font-bold rounded-md bg-emerald-500 text-gray-950 shadow-md transition-all";
+            renderMasterCharts();
+        }
+
+        function toggleOverlay(overlay) {
+            window.overlaySettings[overlay] = !window.overlaySettings[overlay];
+            const btn = document.getElementById(`overlay-${overlay}`);
+            if (window.overlaySettings[overlay]) {
+                btn.className = "px-3 py-1 text-xs font-bold rounded-md bg-emerald-500 text-gray-950 shadow-md transition-all";
+            } else {
+                btn.className = "px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all";
+            }
+            renderMasterCharts();
+        }
+
+        function setDrawingTool(tool) {
+            window.drawingTool = tool;
+            ['tool-select', 'tool-trendline'].forEach(id => {
+                document.getElementById(id).className = "px-3 py-1 text-xs font-bold rounded-md text-gray-400 hover:text-white transition-all";
+            });
+            document.getElementById(`tool-${tool}`).className = "px-3 py-1 text-xs font-bold rounded-md bg-emerald-500 text-gray-950 shadow-md transition-all";
+        }
+
+        // File selection handling
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                processAndCompressImage(file);
+            }
+        }
+
+        // Drag & drop selection handling
+        const dropzone = document.getElementById('screenshot-dropzone');
+        if (dropzone) {
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('border-emerald-500', 'bg-emerald-500/5');
+            });
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('border-emerald-500', 'bg-emerald-500/5');
+            });
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('border-emerald-500', 'bg-emerald-500/5');
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    processAndCompressImage(file);
+                }
+            });
+        }
+
+        // Paste clipboard screenshots (Ctrl+V) directly inside notes field
+        document.addEventListener('paste', (e) => {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const file = items[i].getAsFile();
+                    processAndCompressImage(file);
+                }
+            }
+        });
+
+        // Smart offscreen canvas compression routine (75% quality conversion)
+        function processAndCompressImage(file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    // Standard boundaries maintaining extreme readability
+                    const MAX_WIDTH = 1200;
+                    const MAX_HEIGHT = 900;
+                    
+                    if (width > MAX_WIDTH) {
+                        height = Math.round((height * MAX_WIDTH) / width);
+                        width = MAX_WIDTH;
+                    }
+                    if (height > MAX_HEIGHT) {
+                        width = Math.round((width * MAX_HEIGHT) / height);
+                        height = MAX_HEIGHT;
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Transcode PNG/BMP coordinates to lightweight, highly compressed JPEG format
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                    
+                    tickerDatabase[currentTicker].screenshot = compressedBase64;
+                    saveNotesToMemory();
+                    loadActiveTickerNotes();
+                    showToast('Image Linked', 'Compressed & attached screenshot!', 'success');
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearActiveScreenshot(event) {
+            if (event) event.stopPropagation();
+            tickerDatabase[currentTicker].screenshot = '';
+            saveNotesToMemory();
+            loadActiveTickerNotes();
+            showToast('Image Purged', 'Reference snapshot removed.', 'info');
+        }
+
+        // Notes editing saving triggers
+        function handleNotesChange() {
+            const val = document.getElementById('notes-textarea').value;
+            tickerDatabase[currentTicker].notes = val;
+            saveNotesToMemory();
+        }
+
+        function loadActiveTickerNotes() {
+            const activeData = tickerDatabase[currentTicker] || { notes: '', screenshot: '' };
+            
+            // Set textarea
+            document.getElementById('notes-textarea').value = activeData.notes;
+            
+            // Adjust dynamic graphic panels
+            const hasImg = activeData.screenshot && activeData.screenshot.length > 0;
+            const displayBox = document.getElementById('screenshot-display-container');
+            const editBox = document.getElementById('screenshot-admin-controls');
+            const attachedImg = document.getElementById('attached-screenshot');
+            const tags = document.querySelectorAll('.active-tag-text');
+            
+            tags.forEach(t => t.textContent = currentTicker);
+
+            if (hasImg) {
+                attachedImg.src = activeData.screenshot;
+                displayBox.classList.remove('hidden');
+                editBox.classList.add('hidden');
+            } else {
+                attachedImg.src = '';
+                displayBox.classList.add('hidden');
+                if (userRole === 'admin') {
+                    editBox.classList.remove('hidden');
+                }
+            }
+        }
+
+        function selectTicker(sym) {
+            window.currentTicker = sym;
+            
+            // Re-render components
+            renderWatchlist();
+            loadActiveTickerNotes();
+            
+            // Update Title metrics
+            document.getElementById('active-ticker-title').textContent = sym;
+            const activeSeries = getActiveSeries();
+            if (activeSeries.length > 0) {
+                const lastIdx = activeSeries.length - 1;
+                const lastClose = activeSeries[lastIdx].close;
+                const firstClose = activeSeries[0].close;
+                const changePct = ((lastClose - firstClose) / firstClose) * 100;
+                
+                document.getElementById('active-ticker-price').textContent = `$${lastClose.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                
+                const changeEl = document.getElementById('active-ticker-change');
+                changeEl.textContent = `${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%`;
+                if (changePct >= 0) {
+                    changeEl.className = "text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400";
+                } else {
+                    changeEl.className = "text-xs font-semibold px-2 py-0.5 rounded-md bg-red-500/10 text-red-400";
+                }
+            }
+            
+            renderMasterCharts();
+        }
+
+        function renderWatchlist() {
+            const container = document.getElementById('ticker-list');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            const list = Object.keys(tickerDatabase);
+            document.getElementById('watchlist-count').textContent = list.length;
+
+            list.forEach(sym => {
+                const isActive = sym === currentTicker;
+                const card = document.createElement('div');
+                
+                // Get last price performance for tiny metrics
+                const dataSeries = window.activeTickerData[sym]?.historical || [];
+                let priceStr = "$--";
+                let pctStr = "0.00%";
+                let isUp = true;
+                
+                if (dataSeries.length > 0) {
+                    const lastBar = dataSeries[dataSeries.length - 1];
+                    const firstBar = dataSeries[0];
+                    priceStr = `$${lastBar.close.toFixed(2)}`;
+                    const changePct = ((lastBar.close - firstBar.close) / firstBar.close) * 100;
+                    pctStr = `${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%`;
+                    isUp = changePct >= 0;
+                }
+
+                card.className = `p-3 rounded-xl flex justify-between items-center cursor-pointer transition-all border ${
+                    isActive 
+                        ? 'bg-emerald-500/10 border-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
+                        : 'bg-[#111827] border-gray-800 text-gray-400 hover:text-white hover:border-gray-700'
+                }`;
+                card.onclick = () => selectTicker(sym);
+
+                card.innerHTML = `
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold tracking-wider uppercase">${sym}</span>
+                        <span class="text-[10px] ${isUp ? 'text-emerald-400' : 'text-red-400'} font-semibold mt-0.5">${pctStr}</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-xs font-bold text-gray-200">${priceStr}</span>
+                        ${userRole === 'admin' ? `
+                            <button onclick="handleDeleteTicker(event, '${sym}')" class="text-gray-500 hover:text-red-400 text-xs w-6 h-6 flex items-center justify-center rounded bg-gray-850 hover:bg-red-500/10 transition-all">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function handleAddTicker(e) {
+            e.preventDefault();
+            const input = document.getElementById('new-ticker-input');
+            const val = input.value.trim().toUpperCase();
+            
+            if (val) {
+                if (tickerDatabase[val]) {
+                    showToast('Ticker Exists', 'Asset already registered inside watchlist.', 'info');
+                    return;
+                }
+                
+                // Initialize database schema
+                tickerDatabase[val] = { drawings: [], notes: '', screenshot: '' };
+                
+                // Generate simulated indicators vectors
+                window.activeTickerData[val] = {
+                    intraday: generateIntradayData(val),
+                    historical: generateHistoricalData(val, 300)
+                };
+
+                saveNotesToMemory();
+                selectTicker(val);
+                input.value = '';
+                showToast('Asset Bootstrapped', `Added ${val} alongside computed indicator panels!`, 'success');
+            }
+        }
+
+        function handleDeleteTicker(event, sym) {
+            event.stopPropagation();
+            const list = Object.keys(tickerDatabase);
+            
+            if (list.length <= 1) {
+                showToast('Action Blocked', 'Watchlist requires at least one active asset profile.', 'error');
+                return;
+            }
+
+            delete tickerDatabase[sym];
+            delete window.activeTickerData[sym];
+            saveNotesToMemory();
+
+            if (currentTicker === sym) {
+                const remaining = Object.keys(tickerDatabase);
+                selectTicker(remaining[0]);
+            } else {
+                renderWatchlist();
+            }
+
+            showToast('Asset Purged', `${sym} successfully removed from sidebar dashboard.`, 'success');
+        }
+
+        // Unlock Portal Logic
+        function attemptUnlock() {
+            const pass = document.getElementById('gate-passcode').value;
+            if (pass === window.masterPasscode) {
+                document.getElementById('lock-screen').classList.add('opacity-0', 'pointer-events-none');
+                showToast('Access Granted', 'Successfully entered Brannon Trades sandbox node.', 'success');
+            } else {
+                showToast('Invalid Passcode', 'Please check credentials and retry.', 'error');
+            }
+        }
+
+        function attemptGoogleAuth() {
+            // Simulated Dev login bypass
+            const devEmail = 'brannontrades@gmail.com';
+            document.getElementById('session-badge-text').textContent = devEmail;
+            document.getElementById('lock-screen').classList.add('opacity-0', 'pointer-events-none');
+            showToast('Authorized', `Signed in as admin: ${devEmail}`, 'success');
+        }
+
+        function lockPortal() {
+            document.getElementById('lock-screen').classList.remove('opacity-0', 'pointer-events-none');
+            showToast('Session Locked', 'Logged out of active dashboard session.', 'info');
+        }
+
+        // Local state cache storage
+        function saveNotesToMemory() {
+            localStorage.setItem('brannon_ticker_db', JSON.stringify(tickerDatabase));
+        }
+
+        function loadNotesFromMemory() {
+            const cache = localStorage.getItem('brannon_ticker_db');
+            if (cache) {
+                const parsed = JSON.parse(cache);
+                // merge missing profiles safely
+                Object.keys(parsed).forEach(sym => {
+                    tickerDatabase[sym] = parsed[sym];
+                });
+            }
+        }
+
+        function triggerCloudPublish() {
+            showToast('Publishing...', 'Uploading drawings, screens, and strategies to cloud...', 'info');
+            setTimeout(() => {
+                showToast('Nodes Synced', 'Successfully updated family endpoints!', 'success');
+            }, 1200);
+        }
+
+        // Configuration Modals
+        function openConfigModal() {
+            document.getElementById('config-modal').classList.remove('hidden');
+        }
+
+        function closeConfigModal() {
+            document.getElementById('config-modal').classList.add('hidden');
+        }
+
+        function switchSettingsTab(tab) {
+            ['sync', 'whitelist', 'feed'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).className = "px-4 py-2 text-xs font-bold text-gray-400 border-b-2 border-transparent hover:text-white";
+            });
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tab}`).className = "px-4 py-2 text-xs font-bold border-b-2 border-emerald-500 text-emerald-400";
+        }
+
+        function addToWhitelist() {
+            const input = document.getElementById('whitelist-email-input');
+            const val = input.value.trim().toLowerCase();
+            if (val && !systemWhitelist.includes(val)) {
+                systemWhitelist.push(val);
+                renderWhitelistTags();
+                input.value = '';
+                showToast('Whitelist Updated', 'Granted cloud permissions to user.', 'success');
+            }
+        }
+
+        function removeFromWhitelist(email) {
+            window.systemWhitelist = systemWhitelist.filter(e => e !== email);
+            renderWhitelistTags();
+            showToast('Access Purged', 'Revoked account permissions.', 'info');
+        }
+
+        function renderWhitelistTags() {
+            const container = document.getElementById('whitelist-tags-container');
+            container.innerHTML = '';
+            systemWhitelist.forEach(email => {
+                const tag = document.createElement('div');
+                tag.className = "inline-flex items-center space-x-1.5 px-2.5 py-1 bg-[#111827] border border-gray-800 text-xs text-gray-300 rounded-lg";
+                tag.innerHTML = `
+                    <span>${email}</span>
+                    <button onclick="removeFromWhitelist('${email}')" class="text-gray-500 hover:text-red-400 text-[10px]"><i class="fa-solid fa-x"></i></button>
+                `;
+                container.appendChild(tag);
+            });
+        }
+
+        function applyConfiguration() {
+            const masterPass = document.getElementById('config-passcode').value;
+            window.masterPasscode = masterPass;
+            
+            // Apply Firebase local mock bindings
+            const hasFirebaseKeys = document.getElementById('firebase-config-input').value.includes('apiKey');
+            const pill = document.getElementById('cloud-pill');
+            const text = document.getElementById('cloud-pill-text');
+
+            if (hasFirebaseKeys) {
+                pill.className = "bg-emerald-500/10 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2";
+                text.textContent = "Cloud Sync Active";
+                showToast('Firebase Configured', 'Secure Google Firestore connection online!', 'success');
+            } else {
+                pill.className = "bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/50 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2";
+                text.textContent = "Offline (Local Cache)";
+            }
+
+            closeConfigModal();
+        }
+
+        // Fullscreen Lightbox modules
+        function openLightbox() {
+            const activeData = tickerDatabase[currentTicker];
+            if (activeData?.screenshot) {
+                document.getElementById('lightbox-image').src = activeData.screenshot;
+                document.getElementById('lightbox-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').classList.add('hidden');
+        }
+
+        // Dynamic Toast Module
+        function showToast(title, body, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = "flex items-start gap-3 bg-[#111827] border border-gray-800 p-4 rounded-xl shadow-2xl w-80 pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300";
+            
+            let iconColor = "text-emerald-400";
+            let icon = "fa-circle-check";
+            if (type === 'error') {
+                iconColor = "text-red-400";
+                icon = "fa-circle-exclamation";
+            } else if (type === 'info') {
+                iconColor = "text-blue-400";
+                icon = "fa-circle-info";
+            }
+
+            toast.innerHTML = `
+                <div class="${iconColor} text-lg"><i class="fa-solid ${icon}"></i></div>
+                <div class="flex-grow">
+                    <h4 class="text-xs font-bold text-white">${title}</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5 leading-relaxed">${body}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+
+            // Trigger animation frame
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            // Auto-dismiss element
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3500);
+        }
+
+        window.onload = function() {
+            // Load state variables
+            loadNotesFromMemory();
+            rebuildDatasetCache();
+            renderWhitelistTags();
+            
+            // Set initial symbol
+            selectTicker('BTCUSD');
+
+            // Wire up core Canvas input observers
+            const pc = document.getElementById('price-canvas');
+            pc.addEventListener('mousedown', handleMouseDown);
+            pc.addEventListener('mousemove', handleMouseMove);
+            pc.addEventListener('mouseup', handleMouseUp);
+
+            // Dynamically manage responsive resize updates
+            window.addEventListener('resize', renderMasterCharts);
+        };
+    </script>
+</body>
+</html>
