@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brannon Trades v2.0</title>
+    <title>Brannon Trades v2.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,25 +13,48 @@
 
     <!-- LOGIN GATEWAY -->
     <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19] z-[100] flex flex-col justify-center items-center p-4">
-        <div class="bg-[#111827] p-8 rounded-2xl border border-gray-800 w-full max-w-sm shadow-2xl">
+        <div class="bg-[#111827] p-8 rounded-2xl border border-gray-800 w-full max-w-sm shadow-2xl relative">
             <h1 class="text-2xl font-bold text-white mb-6">Brannon Trades</h1>
             
             <input type="password" id="gate-passcode" placeholder="Family Passcode" class="w-full bg-[#0b0f19] p-3 rounded-xl mb-4 border border-gray-700 focus:border-emerald-500 outline-none">
-            <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 text-black font-bold rounded-xl mb-4 hover:bg-emerald-600 transition-all">Access Portal</button>
+            <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 text-black font-bold rounded-xl mb-4">Access Portal</button>
             
-            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] border border-gray-700 text-gray-300 rounded-xl hover:bg-gray-800 transition-all text-sm">
+            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] border border-gray-700 text-gray-300 rounded-xl hover:bg-gray-800 transition-all text-sm font-medium">
                 Sign in with Google
             </button>
-            <div class="mt-6 text-center"><span class="px-2 py-1 bg-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase rounded">v2.0 Active</span></div>
+            
+            <div class="mt-6 flex justify-center">
+                <span class="px-2 py-1 bg-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase rounded">v2.1 Stable</span>
+            </div>
         </div>
     </div>
 
     <!-- MAIN PORTAL -->
     <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex justify-between items-center">
-        <h1 class="font-bold">Brannon Trades <span class="text-xs text-gray-500 ml-2">v2.0</span></h1>
-        <div id="user-badge" class="hidden text-[10px] font-bold text-emerald-400 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 uppercase">Admin</div>
-        <button onclick="openConfigModal()" class="text-gray-400 hover:text-white px-3 py-1 text-sm"><i class="fa-solid fa-gear"></i></button>
+        <h1 class="font-bold">Brannon Trades <span class="text-xs text-gray-500 ml-2">v2.1</span></h1>
+        <div class="flex items-center gap-4">
+            <div id="user-badge" class="hidden text-[10px] font-bold text-emerald-400 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 uppercase tracking-wider">Admin</div>
+            <button onclick="openConfigModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-gear"></i></button>
+        </div>
     </header>
+
+    <!-- SETTINGS MODAL -->
+    <div id="config-modal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center p-4 z-[105]">
+        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl w-full max-w-md">
+            <h3 class="font-bold mb-6">System Configuration</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] uppercase text-gray-500 font-bold block mb-1">Firebase API Key</label>
+                    <input type="text" id="cfg-firebase" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono text-emerald-400">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase text-gray-500 font-bold block mb-1">Twelve Data API Key</label>
+                    <input type="text" id="cfg-twelve" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono text-emerald-400">
+                </div>
+                <button onclick="saveConfiguration()" class="w-full py-2 bg-emerald-500 text-black rounded-lg font-bold">Save Settings</button>
+            </div>
+        </div>
+    </div>
 
     <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="md:col-span-2 bg-[#111827] p-6 rounded-2xl border border-gray-800 min-h-[400px]">
@@ -44,32 +67,19 @@
         </div>
     </div>
 
-    <!-- CONFIGURATION MODAL -->
-    <div id="config-modal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center p-4 z-[105]">
-        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl w-full max-w-md">
-            <h3 class="font-bold mb-6">System Configuration</h3>
-            <div class="space-y-4">
-                <input type="text" id="cfg-firebase" placeholder="Firebase API Key" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono">
-                <input type="text" id="cfg-twelve" placeholder="Twelve Data API Key" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono">
-                <button onclick="saveSettings()" class="w-full py-2 bg-emerald-500 text-black rounded-lg font-bold">Save Settings</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         const WHITELIST = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
 
+        // Auth Logic
         function attemptUnlock() {
-            if(document.getElementById('gate-passcode').value === 'SmithFamilyCode') {
-                grantAccess('admin');
-            } else { alert("Incorrect passcode."); }
+            if(document.getElementById('gate-passcode').value === 'SmithFamilyCode') grantAccess('admin');
+            else alert("Incorrect passcode.");
         }
 
         function attemptGoogleAuth() {
-            const email = prompt("Enter your authorized email:");
-            if(WHITELIST.includes(email?.toLowerCase())) {
-                grantAccess(email.toLowerCase() === 'peter.brannon@gmail.com' ? 'admin' : 'viewer');
-            } else { alert("Email not whitelisted."); }
+            const email = prompt("Enter email:");
+            if(WHITELIST.includes(email?.toLowerCase())) grantAccess(email.toLowerCase() === 'peter.brannon@gmail.com' ? 'admin' : 'viewer');
+            else alert("Unauthorized.");
         }
 
         function grantAccess(role) {
@@ -78,14 +88,21 @@
             else document.getElementById('notes').readOnly = true;
         }
 
+        // Config Logic
         function openConfigModal() { document.getElementById('config-modal').classList.remove('hidden'); }
         function closeConfigModal() { document.getElementById('config-modal').classList.add('hidden'); }
-        function saveSettings() { 
+        
+        function saveConfiguration() {
             localStorage.setItem('firebase', document.getElementById('cfg-firebase').value);
             localStorage.setItem('twelve', document.getElementById('cfg-twelve').value);
-            alert("Settings saved.");
+            alert("Settings saved locally.");
             closeConfigModal();
         }
+
+        window.onload = () => {
+            document.getElementById('cfg-firebase').value = localStorage.getItem('firebase') || "";
+            document.getElementById('cfg-twelve').value = localStorage.getItem('twelve') || "";
+        };
     </script>
 </body>
 </html>
