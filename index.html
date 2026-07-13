@@ -1,50 +1,181 @@
-<!-- ... existing code ... -->
-                    mainContainer.appendChild(row);
-                    document.getElementById(`rem-main-${email}`).addEventListener('click', () => removeFromWhitelist(email));
-                });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brannon Trades - Strategic Trade Ideas v1.3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0b0f19; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- SECURE LOCK SCREEN GATEWAY -->
+    <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19]/98 backdrop-blur-md z-[100] flex flex-col justify-center items-center px-4 transition-all duration-300">
+        <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
+            <div class="flex justify-center items-center space-x-3 mb-6">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                    <svg class="w-7 h-7 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8 6H16V18H8V6Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M17 10V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M7 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="text-left">
+                    <span class="text-2xl font-bold tracking-tight text-white block">Brannon Trades</span>
+                    <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">v1.3 | Strategic Portal</span>
+                </div>
+            </div>
+
+            <h2 class="text-lg font-medium text-gray-300 mb-6">Enter Passcode to Access Family Node</h2>
+            <div class="space-y-4">
+                <div class="relative">
+                    <input type="password" id="gate-passcode" placeholder="Enter Family Passcode" class="w-full bg-[#1c2333] border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 pl-11 text-white placeholder-gray-500 focus:outline-none transition-all">
+                    <i class="fa-solid fa-lock absolute left-4 top-4 text-gray-500"></i>
+                </div>
+                <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-gray-950 font-bold rounded-xl transition-all shadow-[0_4px_20px_rgba(16,185,129,0.3)]">Unlock Portal</button>
+            </div>
+            <div class="relative flex py-5 items-center">
+                <div class="flex-grow border-t border-gray-800"></div>
+                <span class="flex-shrink mx-4 text-gray-500 text-xs uppercase tracking-widest font-semibold">or authenticate</span>
+                <div class="flex-grow border-t border-gray-800"></div>
+            </div>
+            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] hover:bg-[#252f44] border border-gray-700 hover:border-gray-600 rounded-xl flex items-center justify-center space-x-3 text-sm font-medium transition-all active:scale-[0.98]">
+                <i class="fa-brands fa-google text-red-400 text-base"></i>
+                <span>Sign in with Google Account</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4 z-10">
+        <div class="flex items-center space-x-3">
+             <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+                <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M8 6h8M17 10v4M7 8v8"/></svg>
+             </div>
+             <div>
+                 <h1 class="text-xl font-bold text-white leading-none">Brannon Trades <span class="text-xs font-mono text-gray-500 ml-2">v1.3</span></h1>
+                 <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">Strategic Portal</span>
+             </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="openConfigModal()" id="cloud-pill" class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2">
+                <span id="cloud-pill-text">Offline (Local Cache)</span>
+            </button>
+            <button onclick="lockPortal()" class="w-9 h-9 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl"><i class="fa-solid fa-power-off"></i></button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="flex-grow p-6">
+        <!-- Placeholder for app content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-[#111827] border border-gray-800 rounded-2xl p-6 min-h-[400px]">
+                <h2 class="text-lg font-bold mb-4">Market Workspace</h2>
+                <div id="chart-viewport" class="text-gray-500 text-center py-20 border border-dashed border-gray-800 rounded-xl">Chart Data Loaded Here</div>
+            </div>
+            <div class="bg-[#111827] border border-gray-800 rounded-2xl p-6">
+                 <h3 class="text-sm font-bold uppercase text-gray-400 mb-4">Playbook</h3>
+                 <textarea id="notes-textarea" class="w-full h-64 bg-[#0b0f19] border border-gray-800 rounded-xl p-4 text-sm text-gray-200" placeholder="Strategy notes..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[105] hidden flex justify-center items-center p-4">
+        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl w-full max-w-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-white">System Settings</h3>
+                <button onclick="closeConfigModal()" class="text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <textarea id="firebase-config-input" placeholder="Paste full Firebase config block here..." class="w-full h-48 bg-[#0b0f19] border border-gray-800 rounded-xl p-3 text-xs font-mono text-emerald-400"></textarea>
+            <button onclick="applyConfiguration()" class="w-full mt-4 py-2 bg-emerald-500 text-gray-950 rounded-xl font-bold">Save and Apply</button>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-6 right-6 space-y-2 z-[200]"></div>
+
+    <script>
+        // CONFIGURATION AND STATE
+        window.masterPasscode = 'SmithFamilyCode';
+        window.systemWhitelist = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
+        window.userRole = 'viewer'; 
+
+        function attemptUnlock() {
+            const pass = document.getElementById('gate-passcode').value;
+            if (pass === window.masterPasscode) {
+                document.getElementById('lock-screen').classList.add('opacity-0', 'pointer-events-none');
+                window.userRole = 'admin';
+            } else {
+                showToast('Access Denied', 'Invalid Passcode', 'error');
+            }
+        }
+
+        function attemptGoogleAuth() {
+            const email = prompt("Enter your email for authentication:");
+            if (!email) return;
+            const cleanEmail = email.toLowerCase().trim();
+            if (window.systemWhitelist.includes(cleanEmail)) {
+                document.getElementById('lock-screen').classList.add('opacity-0', 'pointer-events-none');
+                window.userRole = (cleanEmail === 'peter.brannon@gmail.com') ? 'admin' : 'viewer';
+                showToast('Welcome', `Authenticated as ${cleanEmail}`, 'success');
+            } else {
+                showToast('Access Denied', 'Email not whitelisted', 'error');
             }
         }
 
         function parseFirebaseConfig(rawInput) {
             try {
-                // Bulletproof parser: Hunts for keys directly, ignoring all other Javascript/HTML text
                 const extract = (key) => {
                     const regex = new RegExp(`${key}\\s*:\\s*["']([^"']+)["']`);
                     const match = rawInput.match(regex);
                     return match ? match[1] : undefined;
                 };
-
                 const config = {
                     apiKey: extract('apiKey'),
                     authDomain: extract('authDomain'),
                     projectId: extract('projectId'),
                     storageBucket: extract('storageBucket'),
                     messagingSenderId: extract('messagingSenderId'),
-                    appId: extract('appId'),
-                    measurementId: extract('measurementId')
+                    appId: extract('appId')
                 };
+                return (config.apiKey && config.projectId) ? config : null;
+            } catch (err) { return null; }
+        }
 
-                // Ensure we at least found the critical keys
-                if (config.apiKey && config.projectId) {
-                    return config;
-                }
-                return null;
-            } catch (err) {
-                console.error("Config parsing failure:", err);
-                return null;
+        function applyConfiguration() {
+            const raw = document.getElementById('firebase-config-input').value;
+            const config = parseFirebaseConfig(raw);
+            if (config) {
+                localStorage.setItem('brannon_firebase_cfg', JSON.stringify(config));
+                document.getElementById('cloud-pill-text').textContent = "Cloud Sync Active";
+                document.getElementById('cloud-pill').classList.replace('bg-amber-500/10', 'bg-emerald-500/10');
+                showToast('Config Saved', 'Database connection established.', 'success');
+                closeConfigModal();
+            } else {
+                showToast('Config Error', 'Could not parse Firebase config object syntax.', 'error');
             }
         }
 
-        async function applyConfiguration() {
-            const masterPass = document.getElementById('config-passcode').value;
-<!-- ... existing code ... -->
-```
+        function openConfigModal() { document.getElementById('config-modal').classList.remove('hidden'); }
+        function closeConfigModal() { document.getElementById('config-modal').classList.add('hidden'); }
+        function lockPortal() { window.location.reload(); }
 
-### How to apply this fix right now:
-1. Open your `index.html` file on GitHub.
-2. Scroll down near the bottom (around line 980) and find `function parseFirebaseConfig(rawInput)`.
-3. Replace that old function completely with the new version provided in the code block above.
-4. Click **Commit changes**, and wait for the Actions tab to show the green checkmark.
-5. Open your portal and use the cache buster URL: `https://your-github-username.github.io/brannon-trades/?v=regexhunter`
-
-You will now be able to paste the **entire block of code** from Firebase directly into the Database Sync tab. Hit **Save and Apply**, and it will bypass the crash, instantly turn your status pill Green, and connect you to the cloud!
+        function showToast(title, body, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "p-4 bg-[#111827] border border-gray-800 rounded-xl text-white shadow-xl";
+            toast.innerHTML = `<h4 class="text-xs font-bold">${title}</h4><p class="text-[10px] text-gray-400">${body}</p>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
