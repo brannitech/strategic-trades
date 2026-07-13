@@ -1,37 +1,91 @@
-<!-- LOGIN GATEWAY - VERIFIED v2.0 -->
-<div id="lock-screen" class="bg-[#111827] p-8 rounded-2xl border border-gray-800 w-full max-w-sm shadow-2xl">
-    <h1 class="text-2xl font-bold text-white mb-2">Brannon Trades</h1>
-    <p class="text-emerald-500 font-bold mb-6 italic">v2.0 (Verified Update)</p>
-    
-    <input type="password" id="gate-passcode" placeholder="Enter Family Passcode" 
-           class="w-full bg-[#0b0f19] p-3 rounded-xl mb-4 border border-gray-700 text-white focus:border-emerald-500 outline-none">
-    
-    <button onclick="attemptUnlock()" 
-            class="w-full py-3 bg-emerald-500 text-black font-bold rounded-xl hover:bg-emerald-600 transition-all">
-        Access Portal
-    </button>
-    
-    <div class="mt-6 pt-6 border-t border-gray-800">
-        <button onclick="alert('Google Auth Triggered')" 
-                class="w-full py-3 bg-[#1c2333] border border-gray-700 text-gray-300 rounded-xl hover:bg-gray-800 transition-all text-sm">
-            Sign in with Google
-        </button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brannon Trades v2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>body { font-family: 'Inter', sans-serif; background-color: #0b0f19; }</style>
+</head>
+<body class="text-gray-100 min-h-screen">
+
+    <!-- LOGIN GATEWAY -->
+    <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19] z-[100] flex flex-col justify-center items-center p-4">
+        <div class="bg-[#111827] p-8 rounded-2xl border border-gray-800 w-full max-w-sm shadow-2xl">
+            <h1 class="text-2xl font-bold text-white mb-6">Brannon Trades</h1>
+            
+            <input type="password" id="gate-passcode" placeholder="Family Passcode" class="w-full bg-[#0b0f19] p-3 rounded-xl mb-4 border border-gray-700 focus:border-emerald-500 outline-none">
+            <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 text-black font-bold rounded-xl mb-4 hover:bg-emerald-600 transition-all">Access Portal</button>
+            
+            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] border border-gray-700 text-gray-300 rounded-xl hover:bg-gray-800 transition-all text-sm">
+                Sign in with Google
+            </button>
+            <div class="mt-6 text-center"><span class="px-2 py-1 bg-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase rounded">v2.0 Active</span></div>
+        </div>
     </div>
-</div>
 
-<script>
-    function attemptUnlock() {
-        const pass = document.getElementById('gate-passcode').value;
-        if(pass === 'SmithFamilyCode') {
-            alert("Access Granted - v2.0 Verified");
-        } else {
-            alert("Incorrect passcode.");
+    <!-- MAIN PORTAL -->
+    <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+        <h1 class="font-bold">Brannon Trades <span class="text-xs text-gray-500 ml-2">v2.0</span></h1>
+        <div id="user-badge" class="hidden text-[10px] font-bold text-emerald-400 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 uppercase">Admin</div>
+        <button onclick="openConfigModal()" class="text-gray-400 hover:text-white px-3 py-1 text-sm"><i class="fa-solid fa-gear"></i></button>
+    </header>
+
+    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-2 bg-[#111827] p-6 rounded-2xl border border-gray-800 min-h-[400px]">
+            <h2 class="font-bold mb-4">Market Workspace</h2>
+            <div id="workspace" class="text-gray-500 italic text-sm">Dashboard connecting to Live Feed...</div>
+        </div>
+        <div class="bg-[#111827] p-6 rounded-2xl border border-gray-800">
+            <h3 class="font-bold mb-4">Playbook</h3>
+            <textarea id="notes" class="w-full h-64 bg-[#0b0f19] p-4 rounded-xl border border-gray-800 text-sm focus:border-emerald-500 outline-none" placeholder="Admin notes..."></textarea>
+        </div>
+    </div>
+
+    <!-- CONFIGURATION MODAL -->
+    <div id="config-modal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center p-4 z-[105]">
+        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl w-full max-w-md">
+            <h3 class="font-bold mb-6">System Configuration</h3>
+            <div class="space-y-4">
+                <input type="text" id="cfg-firebase" placeholder="Firebase API Key" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono">
+                <input type="text" id="cfg-twelve" placeholder="Twelve Data API Key" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono">
+                <button onclick="saveSettings()" class="w-full py-2 bg-emerald-500 text-black rounded-lg font-bold">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WHITELIST = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
+
+        function attemptUnlock() {
+            if(document.getElementById('gate-passcode').value === 'SmithFamilyCode') {
+                grantAccess('admin');
+            } else { alert("Incorrect passcode."); }
         }
-    }
-</script>
-How to verify:
-Click the Preview button (or refresh it).
 
-Look for the "v2.0 (Verified Update)" text.
+        function attemptGoogleAuth() {
+            const email = prompt("Enter your authorized email:");
+            if(WHITELIST.includes(email?.toLowerCase())) {
+                grantAccess(email.toLowerCase() === 'peter.brannon@gmail.com' ? 'admin' : 'viewer');
+            } else { alert("Email not whitelisted."); }
+        }
 
-If you see that, we have successfully broken through the cache, and we can proceed with the full v2.0 architecture!
+        function grantAccess(role) {
+            document.getElementById('lock-screen').classList.add('hidden');
+            if(role === 'admin') document.getElementById('user-badge').classList.remove('hidden');
+            else document.getElementById('notes').readOnly = true;
+        }
+
+        function openConfigModal() { document.getElementById('config-modal').classList.remove('hidden'); }
+        function closeConfigModal() { document.getElementById('config-modal').classList.add('hidden'); }
+        function saveSettings() { 
+            localStorage.setItem('firebase', document.getElementById('cfg-firebase').value);
+            localStorage.setItem('twelve', document.getElementById('cfg-twelve').value);
+            alert("Settings saved.");
+            closeConfigModal();
+        }
+    </script>
+</body>
+</html>
