@@ -39,9 +39,13 @@
         <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
             <!-- Branding -->
             <div class="flex justify-center items-center space-x-3 mb-6">
+                <!-- SVG Rising Candlestick Icon -->
                 <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                    <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-line-cap="round" stroke-line-join="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    <svg class="w-7 h-7 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8 6H16V18H8V6Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M17 10V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M7 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
                 </div>
                 <div class="text-left">
@@ -69,11 +73,39 @@
                 <div class="flex-grow border-t border-gray-800"></div>
             </div>
 
+            <!-- Authentic Secure Google Single Sign-On simulation -->
             <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] hover:bg-[#252f44] border border-gray-700 hover:border-gray-600 rounded-xl flex items-center justify-center space-x-3 text-sm font-medium transition-all active:scale-[0.98]">
                 <i class="fa-brands fa-google text-red-400 text-base"></i>
                 <span>Sign in with Google Account</span>
             </button>
-            <p class="text-[11px] text-gray-500 mt-4 leading-relaxed">Authorized accounts will pass through automatically. Default local passcode: <code class="text-emerald-500 font-mono">SmithFamilyCode</code></p>
+            <p class="text-[11px] text-gray-500 mt-4 leading-relaxed">Authorized family accounts will pass through automatically.</p>
+        </div>
+    </div>
+
+    <!-- IN-APP GOOGLE SECURE PORTAL OVERLAY -->
+    <div id="google-signin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] hidden flex justify-center items-center p-4">
+        <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl w-full max-w-sm shadow-2xl relative text-center">
+            <button onclick="closeGoogleSignInModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 text-lg transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex justify-center mb-4">
+                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-lg">
+                    <i class="fa-brands fa-google text-red-500 text-xl"></i>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">Sign in with Google</h3>
+            <p class="text-xs text-gray-400 mb-6">to continue to Brannon Trades Node</p>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Email address</label>
+                    <input type="email" id="google-email-input" placeholder="your-email@gmail.com" required
+                           class="w-full bg-[#1c2333] border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none transition-all">
+                </div>
+                <button onclick="submitGoogleAuth()" class="w-full py-3 bg-white hover:bg-gray-100 text-gray-900 font-bold rounded-xl transition-all shadow-md flex items-center justify-center space-x-2">
+                    <span>Continue to Portal</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -82,9 +114,12 @@
         <div class="flex items-center space-x-4">
             <!-- Branding -->
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)] animate-pulse">
-                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                    <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8 6H16V18H8V6Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M17 10V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M7 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
                 </div>
                 <div class="flex flex-col">
@@ -233,7 +268,7 @@
             </div>
 
             <!-- PLAYBOOK & NOTES COLUMN -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div id="workspace-grid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                 <!-- Playbook/Pattern Analysis -->
                 <div class="bg-[#111827] border border-gray-800 p-5 rounded-2xl flex flex-col justify-between">
                     <div>
@@ -256,45 +291,75 @@
                 </div>
 
                 <!-- SCREENSHOT & PATTERN LINK GALLERY -->
-                <div class="bg-[#111827] border border-gray-800 p-5 rounded-2xl flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 flex items-center space-x-2">
-                            <i class="fa-solid fa-image text-emerald-400"></i>
-                            <span>Reference Chart Screenshot</span>
-                        </h3>
-                        <span class="text-[10px] text-emerald-400 bg-emerald-500/15 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest animate-pulse">75% Compression Active</span>
-                    </div>
+                <div class="bg-[#111827] border border-gray-800 p-5 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 flex items-center space-x-2">
+                                <i class="fa-solid fa-image text-emerald-400"></i>
+                                <span>Reference Chart Screenshot</span>
+                            </h3>
+                            <span class="text-[10px] text-emerald-400 bg-emerald-500/15 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest animate-pulse">75% Compression Active</span>
+                        </div>
 
-                    <!-- Upload Trigger Container (Only visible to admin) -->
-                    <div id="screenshot-admin-controls" class="flex-grow flex flex-col justify-center items-center">
-                        <!-- Dropzone area -->
-                        <div id="screenshot-dropzone" 
-                             class="w-full h-full min-h-[140px] border-2 border-dashed border-gray-800 hover:border-emerald-500/60 rounded-xl flex flex-col justify-center items-center p-4 text-center cursor-pointer transition-all bg-[#0b0f19]/40 relative group">
-                            <input type="file" id="screenshot-file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleFileSelect(event)">
-                            
-                            <div class="space-y-2 pointer-events-none" id="dropzone-empty-state">
-                                <div class="w-10 h-10 rounded-xl bg-gray-800 group-hover:bg-emerald-500/10 flex items-center justify-center mx-auto transition-all">
-                                    <i class="fa-solid fa-cloud-arrow-up text-gray-400 group-hover:text-emerald-400"></i>
+                        <!-- Upload Trigger Container (Only visible to admin) -->
+                        <div id="screenshot-admin-controls" class="flex-grow flex flex-col justify-center items-center">
+                            <!-- Dropzone area -->
+                            <div id="screenshot-dropzone" 
+                                 class="w-full h-full min-h-[140px] border-2 border-dashed border-gray-800 hover:border-emerald-500/60 rounded-xl flex flex-col justify-center items-center p-4 text-center cursor-pointer transition-all bg-[#0b0f19]/40 relative group">
+                                <input type="file" id="screenshot-file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleFileSelect(event)">
+                                
+                                <div class="space-y-2 pointer-events-none" id="dropzone-empty-state">
+                                    <div class="w-10 h-10 rounded-xl bg-gray-800 group-hover:bg-emerald-500/10 flex items-center justify-center mx-auto transition-all">
+                                        <i class="fa-solid fa-cloud-arrow-up text-gray-400 group-hover:text-emerald-400"></i>
+                                    </div>
+                                    <p class="text-xs font-bold text-gray-300">Drag & Drop Chart Screenshot or <span class="text-emerald-400">Browse</span></p>
+                                    <p class="text-[10px] text-gray-500 leading-tight">Or just click the text notes box and press <kbd class="px-1.5 py-0.5 bg-gray-800 rounded font-sans text-[9px]">Ctrl+V</kbd> to paste directly!</p>
                                 </div>
-                                <p class="text-xs font-bold text-gray-300">Drag & Drop Chart Screenshot or <span class="text-emerald-400">Browse</span></p>
-                                <p class="text-[10px] text-gray-500 leading-tight">Or just click the text notes box and press <kbd class="px-1.5 py-0.5 bg-gray-800 rounded font-sans text-[9px]">Ctrl+V</kbd> to paste directly!</p>
+                            </div>
+                        </div>
+
+                        <!-- Display View Mode Container -->
+                        <div id="screenshot-display-container" class="hidden relative rounded-xl overflow-hidden border border-gray-800 bg-[#0b0f19] h-[178px]">
+                            <img id="attached-screenshot" src="" alt="Trading Screenshot Reference" class="w-full h-full object-cover cursor-pointer" onclick="openLightbox()">
+                            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3 flex justify-between items-center">
+                                <span class="text-[10px] font-semibold text-gray-400">Linked to <span class="text-white uppercase font-bold active-tag-text">--</span></span>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="openLightbox()" class="text-gray-400 hover:text-white text-xs bg-gray-900/80 px-2 py-1 rounded-md border border-gray-700/60 transition-all">
+                                        <i class="fa-solid fa-expand"></i> Expand
+                                    </button>
+                                    <button id="delete-screenshot-btn" onclick="clearActiveScreenshot(event)" class="text-red-400 hover:text-red-300 text-xs bg-red-950/40 border border-red-500/20 px-2 py-1 rounded-md transition-all">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Display View Mode Container -->
-                    <div id="screenshot-display-container" class="hidden relative rounded-xl overflow-hidden border border-gray-800 bg-[#0b0f19] h-[178px]">
-                        <img id="attached-screenshot" src="" alt="Trading Screenshot Reference" class="w-full h-full object-cover cursor-pointer" onclick="openLightbox()">
-                        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3 flex justify-between items-center">
-                            <span class="text-[10px] font-semibold text-gray-400">Linked to <span class="text-white uppercase font-bold active-tag-text">--</span></span>
-                            <div class="flex items-center space-x-2">
-                                <button onclick="openLightbox()" class="text-gray-400 hover:text-white text-xs bg-gray-900/80 px-2 py-1 rounded-md border border-gray-700/60 transition-all">
-                                    <i class="fa-solid fa-expand"></i> Expand
-                                </button>
-                                <button id="delete-screenshot-btn" onclick="clearActiveScreenshot(event)" class="text-red-400 hover:text-red-300 text-xs bg-red-950/40 border border-red-500/20 px-2 py-1 rounded-md transition-all">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </div>
+                <!-- APPROVED GOOGLE ACCOUNTS (Admin Only) -->
+                <div id="admin-whitelist-card" class="bg-[#111827] border border-gray-800 p-5 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 flex items-center space-x-2">
+                                <i class="fa-solid fa-user-shield text-emerald-400"></i>
+                                <span>Approved Google Accounts</span>
+                            </h3>
+                            <span id="whitelist-main-count" class="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded-md font-bold">0</span>
+                        </div>
+                        <p class="text-[11px] text-gray-500 mb-4 leading-relaxed">These Google accounts bypass the passcode gate automatically when signing in via Google.</p>
+                        
+                        <!-- Quick Add Input -->
+                        <div class="flex gap-2 mb-4">
+                            <input type="email" id="main-whitelist-input" placeholder="family-member@gmail.com"
+                                   class="flex-grow bg-[#0b0f19] border border-gray-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3 py-2 text-xs focus:outline-none text-white placeholder-gray-600">
+                            <button onclick="addFromMainWhitelist()" class="px-3 bg-emerald-500 hover:bg-emerald-600 text-gray-950 text-xs font-bold rounded-xl transition-all">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+
+                        <!-- Scrollable Account List -->
+                        <div id="main-whitelist-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
+                            <!-- Dynamic Whitelist Tags -->
                         </div>
                     </div>
                 </div>
@@ -394,6 +459,7 @@
     <!-- TOAST ALERTS SYSTEM -->
     <div id="toast-container" class="fixed bottom-6 right-6 space-y-2 z-50 pointer-events-none"></div>
 
+    <!-- CORE SCRIPTS & SECURE HANDLERS -->
     <script>
         /* DATABASE STATE DICTIONARIES */
         window.userRole = 'admin'; // 'admin' or 'viewer'
@@ -406,6 +472,9 @@
             ma200: false,
             rsi: false
         };
+
+        // Twelve Data API Storage Key
+        window.marketApiKey = '';
 
         // Master Whitelist (stored locally for bypass simulations)
         window.systemWhitelist = ['brannontrades@gmail.com', 'family@brannontrades.com'];
@@ -463,7 +532,7 @@
             return arr;
         }
 
-        // Generator for 1-Day (5-minute intraday) data (78 points representing 6.5 hours of trading)
+        // Generator for 1-Day (5-minute intraday) data
         function generateIntradayData(symbol) {
             let basePrice = 100;
             if (symbol.includes('BTC')) basePrice = 97000;
@@ -474,8 +543,6 @@
 
             const arr = [];
             let currentClose = basePrice;
-            
-            // Build 78 intervals (5-min steps from 9:30 AM to 4:00 PM)
             let baseHour = 9;
             let baseMin = 30;
 
@@ -506,15 +573,64 @@
             return arr;
         }
 
-        // Keep runtime memory cache of currently populated data series
+        // Real-Time Twelve Data Fetching Engine
+        async function fetchActiveTickerData(symbol) {
+            if (!window.marketApiKey) return;
+
+            showToast('Fetching Feed...', `Connecting to exchange for ${symbol}...`, 'info');
+            
+            let fetchSym = symbol;
+            if (symbol === 'BTCUSD') fetchSym = 'BTC/USD';
+
+            try {
+                const intradayUrl = `https://api.twelvedata.com/time_series?symbol=${fetchSym}&interval=5min&outputsize=78&order=asc&apikey=${window.marketApiKey}`;
+                const historicalUrl = `https://api.twelvedata.com/time_series?symbol=${fetchSym}&interval=1day&outputsize=300&order=asc&apikey=${window.marketApiKey}`;
+
+                const [intraRes, histRes] = await Promise.all([
+                    fetch(intradayUrl).then(r => r.json()),
+                    fetch(historicalUrl).then(r => r.json())
+                ]);
+
+                if (intraRes.status !== 'ok' || histRes.status !== 'ok') {
+                    const errMsg = (intraRes.status !== 'ok' ? intraRes.message : histRes.message) || "Exchange load error.";
+                    showToast('Connection Refused', errMsg, 'error');
+                    return;
+                }
+
+                const mapData = (values) => {
+                    return values.map(v => ({
+                        date: v.datetime.includes(" ") ? v.datetime.split(" ")[1].substring(0, 5) : v.datetime,
+                        open: parseFloat(v.open),
+                        high: parseFloat(v.high),
+                        low: parseFloat(v.low),
+                        close: parseFloat(v.close),
+                        volume: parseInt(v.volume) || 0
+                    }));
+                };
+
+                window.activeTickerData[symbol] = {
+                    intraday: mapData(intraRes.values),
+                    historical: mapData(histRes.values)
+                };
+
+                showToast('Exchange Online', `Synchronized real-time assets for ${symbol}!`, 'success');
+                selectTicker(symbol, false);
+            } catch (error) {
+                console.error("API error", error);
+                showToast('Network Error', 'Could not fetch live exchange prices.', 'error');
+            }
+        }
+
         window.activeTickerData = {};
 
         function rebuildDatasetCache() {
             Object.keys(tickerDatabase).forEach(sym => {
-                window.activeTickerData[sym] = {
-                    intraday: generateIntradayData(sym),
-                    historical: generateHistoricalData(sym, 300)
-                };
+                if (!window.activeTickerData[sym]) {
+                    window.activeTickerData[sym] = {
+                        intraday: generateIntradayData(sym),
+                        historical: generateHistoricalData(sym, 300)
+                    };
+                }
             });
         }
 
@@ -541,7 +657,6 @@
             let gains = 0;
             let losses = 0;
 
-            // First interval
             for (let i = 1; i <= period; i++) {
                 const diff = data[i].close - data[i - 1].close;
                 if (diff > 0) gains += diff;
@@ -553,7 +668,7 @@
             
             for (let i = 0; i < data.length; i++) {
                 if (i < period) {
-                    rsi.push(50); // filler
+                    rsi.push(50);
                 } else {
                     const diff = data[i].close - data[i - 1].close;
                     const gain = diff > 0 ? diff : 0;
@@ -582,7 +697,7 @@
             } else if (activeTimeframe === '3M') {
                 return tickerData.historical.slice(-75);
             } else {
-                return tickerData.historical; // 1Y
+                return tickerData.historical;
             }
         }
 
@@ -593,7 +708,6 @@
             
             if (!canvasPrice) return;
 
-            // Set dynamic responsive size coordinates
             canvasPrice.width = wrapperPrice.clientWidth;
             canvasPrice.height = wrapperPrice.clientHeight;
             
@@ -601,7 +715,6 @@
             const d = getActiveSeries();
             if (d.length === 0) return;
 
-            // Compute math boundary frames
             let minPrice = Infinity;
             let maxPrice = -Infinity;
             let maxVolume = 0;
@@ -612,17 +725,15 @@
                 if (bar.volume > maxVolume) maxVolume = bar.volume;
             });
 
-            // Margin buffering
             const pricePadding = (maxPrice - minPrice) * 0.08 || 1.0;
             maxPrice += pricePadding;
             minPrice -= pricePadding;
 
             const w = canvasPrice.width;
             const h = canvasPrice.height;
-            const graphWidth = w - 60; // Leave room for right price axis
-            const graphHeight = h - 30; // Leave room for bottom timestamp ticks
+            const graphWidth = w - 60;
+            const graphHeight = h - 30;
 
-            // Cache spacing math globally so drawing coordinate system matches indexes
             window.chartDimensions = {
                 dLength: d.length,
                 minPrice: minPrice,
@@ -636,7 +747,6 @@
 
             ctxP.clearRect(0, 0, w, h);
 
-            // Draw clean background horizontal grid lines
             ctxP.strokeStyle = '#1f2937';
             ctxP.lineWidth = 1;
             ctxP.fillStyle = '#6b7280';
@@ -650,21 +760,16 @@
                 ctxP.lineTo(graphWidth, y);
                 ctxP.stroke();
                 
-                // Price tags
                 ctxP.fillText(priceVal.toFixed(2), graphWidth + 8, y + 3);
             }
 
-            // Draw historical candles
             const colW = graphWidth / d.length;
             d.forEach((bar, idx) => {
                 const x = idx * colW + (colW / 2);
-                
-                // Volume bars transparent rendering
                 const volH = (bar.volume / maxVolume) * (graphHeight * 0.18);
                 ctxP.fillStyle = bar.close >= bar.open ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)';
                 ctxP.fillRect(idx * colW + 2, graphHeight - volH, colW - 4, volH);
 
-                // Candlestick rendering
                 const yOpen = graphHeight - ((bar.open - minPrice) / (maxPrice - minPrice)) * graphHeight;
                 const yClose = graphHeight - ((bar.close - minPrice) / (maxPrice - minPrice)) * graphHeight;
                 const yHigh = graphHeight - ((bar.high - minPrice) / (maxPrice - minPrice)) * graphHeight;
@@ -674,17 +779,14 @@
                 ctxP.fillStyle = bar.close >= bar.open ? '#10b981' : '#ef4444';
                 ctxP.lineWidth = colW > 6 ? 1.5 : 1.0;
 
-                // Wick
                 ctxP.beginPath();
                 ctxP.moveTo(x, yHigh);
                 ctxP.lineTo(x, yLow);
                 ctxP.stroke();
 
-                // Body
                 const bodyH = Math.abs(yOpen - yClose) || 1.5;
                 ctxP.fillRect(idx * colW + (colW * 0.15), Math.min(yOpen, yClose), colW * 0.7, bodyH);
 
-                // Render specific timeframe bottom axis ticks
                 if (idx % Math.ceil(d.length / 5) === 0) {
                     ctxP.fillStyle = '#6b7280';
                     const splitLabel = bar.date.includes('-') ? bar.date.substring(5) : bar.date;
@@ -692,16 +794,13 @@
                 }
             });
 
-            // Render active overlays (Moving Averages)
             if (overlaySettings.ma20) renderSMA(ctxP, d, 20, '#f59e0b');
             if (overlaySettings.ma50) renderSMA(ctxP, d, 50, '#3b82f6');
             if (overlaySettings.ma200) renderSMA(ctxP, d, 200, '#a855f7');
 
-            // Render Drawings (Date/Index-Anchored drawings)
             const activeProfile = tickerDatabase[currentTicker] || { drawings: [] };
             ctxP.lineWidth = 2.5;
             activeProfile.drawings.forEach((line, index) => {
-                // Find matching indexes of drawings in active subset
                 const startIdx = d.findIndex(b => b.date === line.startDate);
                 const endIdx = d.findIndex(b => b.date === line.endDate);
 
@@ -721,7 +820,6 @@
                 }
             });
 
-            // Render active temp drawing
             if (isDrawing && currentDrawing) {
                 const startIdx = d.findIndex(b => b.date === currentDrawing.startDate);
                 if (startIdx !== -1) {
@@ -738,7 +836,6 @@
                 }
             }
 
-            // Render RSI index
             if (overlaySettings.rsi) {
                 document.getElementById('rsi-canvas-container').classList.remove('hidden');
                 canvasRSI.width = canvasRSI.parentElement.clientWidth;
@@ -750,7 +847,6 @@
                 const rH = canvasRSI.height;
                 const rW = canvasRSI.width - 60;
 
-                // RSI Reference bounds (70 / 30)
                 ctxR.strokeStyle = 'rgba(239, 68, 68, 0.25)';
                 ctxR.fillStyle = 'rgba(239, 68, 68, 0.03)';
                 const y70 = rH - (70 / 100) * rH;
@@ -758,15 +854,14 @@
 
                 ctxR.fillRect(0, y70, rW, y30 - y70);
                 
-                ctxR.beginPath(); ctxR.moveTo(0, y70); ctxR.lineTo(rW, y70); ctxR.stroke();
+                ctxR.beginPath(); ctxR.moveTo(0, y70); ctxR.lineTo(rW, y70); stroke_custom(ctxR);
                 ctxR.strokeStyle = 'rgba(16, 185, 129, 0.25)';
-                ctxR.beginPath(); ctxR.moveTo(0, y30); ctxR.lineTo(rW, y30); ctxR.stroke();
+                ctxR.beginPath(); ctxR.moveTo(0, y30); ctxR.lineTo(rW, y30); stroke_custom(ctxR);
 
                 ctxR.fillStyle = '#6b7280';
                 ctxR.fillText("70", rW + 8, y70 + 3);
                 ctxR.fillText("30", rW + 8, y30 + 3);
 
-                // Render actual RSI line
                 ctxR.strokeStyle = '#a855f7';
                 ctxR.lineWidth = 1.5;
                 ctxR.beginPath();
@@ -783,7 +878,8 @@
             }
         }
 
-        // Subroutine to render individual SMA trend curves
+        function stroke_custom(c) { c.stroke(); }
+
         function renderSMA(ctx, d, period, color) {
             const sma = calculateSMA(d, period);
             ctx.strokeStyle = color;
@@ -807,7 +903,6 @@
             ctx.stroke();
         }
 
-        // Mouse/Touch Drawing Vector Observers
         function handleMouseDown(e) {
             if (userRole !== 'admin' || drawingTool !== 'trendline') return;
             
@@ -877,11 +972,9 @@
             showToast('Canvas Cleared', 'Trendline coordinates purged.', 'info');
         }
 
-        // Session View Adjusters
         function switchUserRole(role) {
             window.userRole = role;
             
-            // Adjust header toggle buttons
             const btnAdmin = document.getElementById('btn-mode-admin');
             const btnFamily = document.getElementById('btn-mode-family');
             
@@ -893,6 +986,9 @@
                 document.getElementById('screenshot-admin-controls').classList.remove('hidden');
                 document.getElementById('delete-screenshot-btn').classList.remove('hidden');
                 document.getElementById('notes-textarea').removeAttribute('readonly');
+                
+                document.getElementById('admin-whitelist-card').classList.remove('hidden');
+                document.getElementById('workspace-grid').className = "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4";
             } else {
                 btnAdmin.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white";
                 btnFamily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md";
@@ -901,13 +997,15 @@
                 document.getElementById('screenshot-admin-controls').classList.add('hidden');
                 document.getElementById('delete-screenshot-btn').classList.add('hidden');
                 document.getElementById('notes-textarea').setAttribute('readonly', 'true');
+                
+                document.getElementById('admin-whitelist-card').classList.add('hidden');
+                document.getElementById('workspace-grid').className = "grid grid-cols-1 lg:grid-cols-2 gap-4";
             }
             
             renderWatchlist();
             renderMasterCharts();
         }
 
-        // Active toolbar button triggers
         function changeTimeframe(tf) {
             window.activeTimeframe = tf;
             ['tf-1D', 'tf-1M', 'tf-3M', 'tf-1Y'].forEach(id => {
@@ -936,7 +1034,6 @@
             document.getElementById(`tool-${tool}`).className = "px-3 py-1 text-xs font-bold rounded-md bg-emerald-500 text-gray-950 shadow-md transition-all";
         }
 
-        // File selection handling
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
@@ -944,7 +1041,6 @@
             }
         }
 
-        // Drag & drop selection handling
         const dropzone = document.getElementById('screenshot-dropzone');
         if (dropzone) {
             dropzone.addEventListener('dragover', (e) => {
@@ -964,7 +1060,6 @@
             });
         }
 
-        // Paste clipboard screenshots (Ctrl+V) directly inside notes field
         document.addEventListener('paste', (e) => {
             const items = (e.clipboardData || e.originalEvent.clipboardData).items;
             for (let i = 0; i < items.length; i++) {
@@ -975,7 +1070,6 @@
             }
         });
 
-        // Smart offscreen canvas compression routine (75% quality conversion)
         function processAndCompressImage(file) {
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -985,7 +1079,6 @@
                     let width = img.width;
                     let height = img.height;
                     
-                    // Standard boundaries maintaining extreme readability
                     const MAX_WIDTH = 1200;
                     const MAX_HEIGHT = 900;
                     
@@ -1003,7 +1096,6 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    // Transcode PNG/BMP coordinates to lightweight, highly compressed JPEG format
                     const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
                     
                     tickerDatabase[currentTicker].screenshot = compressedBase64;
@@ -1024,7 +1116,6 @@
             showToast('Image Purged', 'Reference snapshot removed.', 'info');
         }
 
-        // Notes editing saving triggers
         function handleNotesChange() {
             const val = document.getElementById('notes-textarea').value;
             tickerDatabase[currentTicker].notes = val;
@@ -1033,11 +1124,8 @@
 
         function loadActiveTickerNotes() {
             const activeData = tickerDatabase[currentTicker] || { notes: '', screenshot: '' };
-            
-            // Set textarea
             document.getElementById('notes-textarea').value = activeData.notes;
             
-            // Adjust dynamic graphic panels
             const hasImg = activeData.screenshot && activeData.screenshot.length > 0;
             const displayBox = document.getElementById('screenshot-display-container');
             const editBox = document.getElementById('screenshot-admin-controls');
@@ -1059,15 +1147,18 @@
             }
         }
 
-        function selectTicker(sym) {
+        async function selectTicker(sym, triggerFetch = true) {
             window.currentTicker = sym;
             
-            // Re-render components
             renderWatchlist();
             loadActiveTickerNotes();
             
-            // Update Title metrics
             document.getElementById('active-ticker-title').textContent = sym;
+
+            if (triggerFetch && window.marketApiKey) {
+                await fetchActiveTickerData(sym);
+            }
+
             const activeSeries = getActiveSeries();
             if (activeSeries.length > 0) {
                 const lastIdx = activeSeries.length - 1;
@@ -1101,7 +1192,6 @@
                 const isActive = sym === currentTicker;
                 const card = document.createElement('div');
                 
-                // Get last price performance for tiny metrics
                 const dataSeries = window.activeTickerData[sym]?.historical || [];
                 let priceStr = "$--";
                 let pctStr = "0.00%";
@@ -1152,10 +1242,7 @@
                     return;
                 }
                 
-                // Initialize database schema
                 tickerDatabase[val] = { drawings: [], notes: '', screenshot: '' };
-                
-                // Generate simulated indicators vectors
                 window.activeTickerData[val] = {
                     intraday: generateIntradayData(val),
                     historical: generateHistoricalData(val, 300)
@@ -1191,7 +1278,6 @@
             showToast('Asset Purged', `${sym} successfully removed from sidebar dashboard.`, 'success');
         }
 
-        // Unlock Portal Logic
         function attemptUnlock() {
             const pass = document.getElementById('gate-passcode').value;
             if (pass === window.masterPasscode) {
@@ -1203,11 +1289,28 @@
         }
 
         function attemptGoogleAuth() {
-            // Simulated Dev login bypass
-            const devEmail = 'brannontrades@gmail.com';
-            document.getElementById('session-badge-text').textContent = devEmail;
-            document.getElementById('lock-screen').classList.add('opacity-0', 'pointer-events-none');
-            showToast('Authorized', `Signed in as admin: ${devEmail}`, 'success');
+            document.getElementById('google-signin-modal').classList.remove('hidden');
+        }
+
+        function closeGoogleSignInModal() {
+            document.getElementById('google-signin-modal').classList.add('hidden');
+        }
+
+        function submitGoogleAuth() {
+            const emailInput = document.getElementById('google-email-input').value;
+            if (!emailInput) return;
+
+            const emailClean = emailInput.trim().toLowerCase();
+            const isApproved = window.systemWhitelist.map(e => e.trim().toLowerCase()).includes(emailClean);
+
+            if (isApproved) {
+                document.getElementById('session-badge-text').textContent = emailClean;
+                document.getElementById('lock-screen').classList.add('opacity-0', 'pointer-events-none');
+                document.getElementById('google-signin-modal').classList.add('hidden');
+                showToast('Access Granted', `Signed in securely as: ${emailClean}`, 'success');
+            } else {
+                showToast('Access Denied', `${emailClean} is not authorized in system whitelist.`, 'error');
+            }
         }
 
         function lockPortal() {
@@ -1215,7 +1318,6 @@
             showToast('Session Locked', 'Logged out of active dashboard session.', 'info');
         }
 
-        // Local state cache storage
         function saveNotesToMemory() {
             localStorage.setItem('brannon_ticker_db', JSON.stringify(tickerDatabase));
         }
@@ -1224,7 +1326,6 @@
             const cache = localStorage.getItem('brannon_ticker_db');
             if (cache) {
                 const parsed = JSON.parse(cache);
-                // merge missing profiles safely
                 Object.keys(parsed).forEach(sym => {
                     tickerDatabase[sym] = parsed[sym];
                 });
@@ -1238,7 +1339,6 @@
             }, 1200);
         }
 
-        // Configuration Modals
         function openConfigModal() {
             document.getElementById('config-modal').classList.remove('hidden');
         }
@@ -1273,25 +1373,62 @@
             showToast('Access Purged', 'Revoked account permissions.', 'info');
         }
 
+        function addFromMainWhitelist() {
+            const input = document.getElementById('main-whitelist-input');
+            const val = input.value.trim().toLowerCase();
+            if (val) {
+                if (window.systemWhitelist.includes(val)) {
+                    showToast('Account Exists', 'This email is already whitelisted.', 'info');
+                    return;
+                }
+                window.systemWhitelist.push(val);
+                renderWhitelistTags();
+                input.value = '';
+                showToast('Access Granted', `Approved Google login for ${val}!`, 'success');
+            }
+        }
+
         function renderWhitelistTags() {
-            const container = document.getElementById('whitelist-tags-container');
-            container.innerHTML = '';
-            systemWhitelist.forEach(email => {
-                const tag = document.createElement('div');
-                tag.className = "inline-flex items-center space-x-1.5 px-2.5 py-1 bg-[#111827] border border-gray-800 text-xs text-gray-300 rounded-lg";
-                tag.innerHTML = `
-                    <span>${email}</span>
-                    <button onclick="removeFromWhitelist('${email}')" class="text-gray-500 hover:text-red-400 text-[10px]"><i class="fa-solid fa-x"></i></button>
-                `;
-                container.appendChild(tag);
-            });
+            const modalContainer = document.getElementById('whitelist-tags-container');
+            if (modalContainer) {
+                modalContainer.innerHTML = '';
+                systemWhitelist.forEach(email => {
+                    const tag = document.createElement('div');
+                    tag.className = "inline-flex items-center space-x-1.5 px-2.5 py-1 bg-[#111827] border border-gray-800 text-xs text-gray-300 rounded-lg";
+                    tag.innerHTML = `
+                        <span>${email}</span>
+                        <button onclick="removeFromWhitelist('${email}')" class="text-gray-500 hover:text-red-400 text-[10px]"><i class="fa-solid fa-x"></i></button>
+                    `;
+                    modalContainer.appendChild(tag);
+                });
+            }
+
+            const mainContainer = document.getElementById('main-whitelist-list');
+            if (mainContainer) {
+                mainContainer.innerHTML = '';
+                document.getElementById('whitelist-main-count').textContent = systemWhitelist.length;
+                systemWhitelist.forEach(email => {
+                    const row = document.createElement('div');
+                    row.className = "flex justify-between items-center bg-[#0b0f19] border border-gray-800 px-3 py-2 rounded-xl text-xs text-gray-300";
+                    row.innerHTML = `
+                        <span class="font-medium truncate"><i class="fa-regular fa-envelope text-gray-500 mr-2"></i>${email}</span>
+                        <button onclick="removeFromWhitelist('${email}')" class="text-gray-500 hover:text-red-400 hover:bg-red-500/10 p-1 rounded transition-all">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    `;
+                    mainContainer.appendChild(row);
+                });
+            }
         }
 
         function applyConfiguration() {
             const masterPass = document.getElementById('config-passcode').value;
             window.masterPasscode = masterPass;
             
-            // Apply Firebase local mock bindings
+            const apiKey = document.getElementById('market-api-key').value.trim();
+            window.marketApiKey = apiKey;
+            localStorage.setItem('brannon_market_api_key', apiKey);
+
             const hasFirebaseKeys = document.getElementById('firebase-config-input').value.includes('apiKey');
             const pill = document.getElementById('cloud-pill');
             const text = document.getElementById('cloud-pill-text');
@@ -1306,9 +1443,9 @@
             }
 
             closeConfigModal();
+            selectTicker(window.currentTicker);
         }
 
-        // Fullscreen Lightbox modules
         function openLightbox() {
             const activeData = tickerDatabase[currentTicker];
             if (activeData?.screenshot) {
@@ -1321,7 +1458,6 @@
             document.getElementById('lightbox-modal').classList.add('hidden');
         }
 
-        // Dynamic Toast Module
         function showToast(title, body, type = 'success') {
             const container = document.getElementById('toast-container');
             if (!container) return;
@@ -1348,12 +1484,10 @@
             `;
             container.appendChild(toast);
 
-            // Trigger animation frame
             setTimeout(() => {
                 toast.classList.remove('translate-y-2', 'opacity-0');
             }, 10);
 
-            // Auto-dismiss element
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => {
@@ -1363,21 +1497,21 @@
         }
 
         window.onload = function() {
-            // Load state variables
             loadNotesFromMemory();
+            
+            window.marketApiKey = localStorage.getItem('brannon_market_api_key') || '';
+            document.getElementById('market-api-key').value = window.marketApiKey;
+
             rebuildDatasetCache();
             renderWhitelistTags();
             
-            // Set initial symbol
             selectTicker('BTCUSD');
 
-            // Wire up core Canvas input observers
             const pc = document.getElementById('price-canvas');
             pc.addEventListener('mousedown', handleMouseDown);
             pc.addEventListener('mousemove', handleMouseMove);
             pc.addEventListener('mouseup', handleMouseUp);
 
-            // Dynamically manage responsive resize updates
             window.addEventListener('resize', renderMasterCharts);
         };
     </script>
