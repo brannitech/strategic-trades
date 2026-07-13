@@ -3,265 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strategic Trades - Family Trade Ideas</title>
-    <!-- Tailwind CSS -->
+    <title>Brannon Trades v3.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <!-- Firebase SDK Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0b0f19;
-        }
-        /* Custom scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #111827;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-    </style>
-</head>
-<body class="text-gray-100 min-h-screen flex flex-col overflow-x-hidden">
-
-    <!-- SECURE LOCK SCREEN GATEWAY -->
-    <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19]/98 backdrop-blur-md z-50 flex flex-col justify-center items-center px-4 transition-all duration-300">
-        <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
-            <div class="flex justify-center items-center space-x-3 mb-6">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                    <svg class="w-7 h-7 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8 6H16V18H8V6Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        <path d="M17 10V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M7 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="text-left">
-                    <span class="text-2xl font-bold tracking-tight text-white block">Brannon Trades v3.1</span>
-                    <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">Strategic Trade Ideas</span>
-                </div>
-            </div>
-
-            <h2 class="text-lg font-medium text-gray-300 mb-6">Enter Passcode to Access Family Node</h2>
-            
-            <div class="space-y-4">
-                <div class="relative">
-                    <input type="password" id="gate-passcode" placeholder="Enter Family Passcode" 
-                           class="w-full bg-[#1c2333] border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 pl-11 text-white placeholder-gray-500 focus:outline-none transition-all">
-                    <i class="fa-solid fa-lock absolute left-4 top-4 text-gray-500"></i>
-                </div>
-                <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-gray-950 font-bold rounded-xl transition-all shadow-[0_4px_20px_rgba(16,185,129,0.3)]">
-                    Unlock Portal
-                </button>
-            </div>
-            
-            <div class="relative flex py-5 items-center">
-                <div class="flex-grow border-t border-gray-800"></div>
-                <span class="flex-shrink mx-4 text-gray-500 text-xs uppercase tracking-widest font-semibold">or authenticate</span>
-                <div class="flex-grow border-t border-gray-800"></div>
-            </div>
-
-            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] hover:bg-[#252f44] border border-gray-700 hover:border-gray-600 rounded-xl flex items-center justify-center space-x-3 text-sm font-medium transition-all active:scale-[0.98]">
-                <i class="fa-brands fa-google text-red-400 text-base"></i>
-                <span>Sign in with Google Account</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- IN-APP GOOGLE SECURE PORTAL OVERLAY -->
-    <div id="google-signin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] hidden flex justify-center items-center p-4">
-        <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl w-full max-w-sm shadow-2xl relative text-center">
-            <button onclick="closeGoogleSignInModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 text-lg transition-all">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="flex justify-center mb-4">
-                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-lg">
-                    <i class="fa-brands fa-google text-red-500 text-xl"></i>
-                </div>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-1">Sign in with Google</h3>
-            <p class="text-xs text-gray-400 mb-6">to continue to Brannon Trades Node</p>
-            
-            <div class="space-y-4 text-left">
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Email address</label>
-                    <input type="email" id="google-email-input" placeholder="your-email@gmail.com" required
-                           class="w-full bg-[#1c2333] border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none transition-all">
-                    <p id="google-signin-error" class="text-xs text-red-400 mt-2 hidden flex items-center space-x-1.5">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        <span id="google-signin-error-text">Not Whitelisted</span>
-                    </p>
-                </div>
-                <button onclick="submitGoogleAuth()" class="w-full py-3 bg-white hover:bg-gray-100 text-gray-900 font-bold rounded-xl transition-all shadow-md flex items-center justify-center space-x-2">
-                    <span>Continue to Portal</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MASTER HEADER -->
-    <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4 z-10">
-        <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-                    <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8 6H16V18H8V6Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        <path d="M17 10V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M7 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-xl font-extrabold tracking-tight text-white leading-none">Brannon Trades v3.1</span>
-                        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">LIVE</span>
-                    </div>
-                    <span class="text-xs text-gray-400 font-medium tracking-wide">Strategic Trade Ideas</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex items-center flex-wrap gap-3">
-            <div class="bg-[#1c2333] border border-gray-800 p-1 rounded-xl flex items-center">
-                <button id="btn-mode-admin" onclick="switchUserRole('admin')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 bg-emerald-500 text-gray-950 shadow-md">
-                    <i class="fa-solid fa-user-gear"></i>
-                    <span>Admin View</span>
-                </button>
-                <button id="btn-mode-family" onclick="switchUserRole('viewer')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 text-gray-400 hover:text-white">
-                    <i class="fa-solid fa-user-group"></i>
-                    <span>Family View</span>
-                </button>
-            </div>
-
-            <button onclick="openConfigModal()" id="cloud-pill" class="bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/50 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-2">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                </span>
-                <span id="cloud-pill-text">Offline (Local Cache)</span>
-            </button>
-
-            <div id="session-badge" class="bg-gray-800/80 border border-gray-700 px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-300 flex items-center space-x-2">
-                <i class="fa-solid fa-key text-gray-400"></i>
-                <span id="session-badge-text">Family Key</span>
-            </div>
-
-            <button onclick="lockPortal()" title="Lock Session" class="w-9 h-9 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40 rounded-xl flex items-center justify-center transition-all active:scale-95">
-                <i class="fa-solid fa-power-off"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- MAIN WORKSPACE -->
-    <div class="flex-grow flex flex-col lg:flex-row h-full">
-        <aside class="w-full lg:w-72 bg-[#111827]/60 border-b lg:border-b-0 lg:border-r border-gray-800 p-4 flex flex-col justify-between">
-            <div>
-                <h2 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4 flex items-center space-x-2">
-                    <i class="fa-solid fa-list-check text-emerald-400"></i>
-                    <span>Watchlist</span>
-                </h2>
-                <div id="add-ticker-container" class="mb-4">
-                    <form id="add-ticker-form" onsubmit="handleAddTicker(event)" class="flex gap-2">
-                        <input type="text" id="new-ticker-input" placeholder="Add Ticker (e.g. AAPL)" required
-                               class="flex-grow bg-[#1c2333] border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wider text-white">
-                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-gray-950 px-3 rounded-lg flex items-center justify-center transition-all font-bold text-sm">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </form>
-                </div>
-                <div id="ticker-list" class="space-y-2 overflow-y-auto max-h-[500px] pr-1"></div>
-            </div>
-        </aside>
-
-        <main class="flex-grow p-4 flex flex-col gap-4 overflow-y-auto">
-            <!-- Workspace Content here (Charts/Notes etc.) -->
-            <div id="chart-viewport-box" class="bg-[#111827] border border-gray-800 rounded-2xl p-4 flex-grow relative min-h-[300px]">
-                <canvas id="price-canvas" class="absolute inset-0 w-full h-full cursor-crosshair z-10"></canvas>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <textarea id="notes-textarea" class="w-full h-44 bg-[#0b0f19] border border-gray-800 p-4 text-sm text-gray-200 rounded-xl" placeholder="Notes..."></textarea>
-            </div>
-        </main>
-    </div>
-
-    <!-- DATABASE CONFIGURATION MODAL -->
-    <div id="config-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden flex justify-center items-center p-4">
-        <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl w-full max-w-lg shadow-2xl relative">
-            <h3 class="text-lg font-bold text-white mb-4">System Settings</h3>
-            <textarea id="firebase-config-input" placeholder="Paste Firebase Config Here" class="w-full h-32 bg-[#0b0f19] border border-gray-800 p-3 text-xs font-mono text-emerald-400"></textarea>
-            <div class="mt-4 flex justify-end gap-2">
-                <button onclick="closeConfigModal()" class="px-4 py-2 bg-gray-800 text-white rounded-xl text-xs">Cancel</button>
-                <button onclick="applyConfiguration()" class="px-5 py-2 bg-emerald-500 text-gray-950 rounded-xl text-xs font-bold">Save and Initialize</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="toast-container" class="fixed bottom-6 right-6 space-y-2 z-[100] pointer-events-none"></div>
-
-    <script>
-        /* FIREBASE INITIALIZATION */
-        function initFirebase(config) {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(config);
-                window.db = firebase.firestore();
-                document.getElementById('cloud-pill').className = "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center space-x-2";
-                document.getElementById('cloud-pill-text').textContent = "Cloud Sync Active";
-                console.log("Firebase initialized successfully.");
-            }
-        }
-
-        function applyConfiguration() {
-            const configText = document.getElementById('firebase-config-input').value;
-            try {
-                // Evaluates the string as a JS object
-                const config = JSON.parse(configText.replace('const firebaseConfig = ', '').replace(';', ''));
-                localStorage.setItem('firebase_config', JSON.stringify(config));
-                initFirebase(config);
-                closeConfigModal();
-            } catch(e) {
-                alert("Invalid Firebase Config format.");
-            }
-        }
-
-        // On Load
-        window.onload = function() {
-            const savedConfig = localStorage.getItem('firebase_config');
-            if (savedConfig) {
-                initFirebase(JSON.parse(savedConfig));
-                document.getElementById('firebase-config-input').value = savedConfig;
-            }
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBV8H3mEkEVEgB41NIxLQFYzBcenz-1crM",
+            authDomain: "brannon-family-trades.firebaseapp.com",
+            projectId: "brannon-family-trades",
+            storageBucket: "brannon-family-trades.firebasestorage.app",
+            messagingSenderId: "348812690999",
+            appId: "1:348812690999:web:51f0f085cf678f67d5a1b2"
         };
 
-        function openConfigModal() { document.getElementById('config-modal').classList.remove('hidden'); }
-        function closeConfigModal() { document.getElementById('config-modal').classList.add('hidden'); }
-        function attemptUnlock() { /* ... existing logic ... */ }
-        function attemptGoogleAuth() { document.getElementById('google-signin-modal').classList.remove('hidden'); }
-        function closeGoogleSignInModal() { document.getElementById('google-signin-modal').classList.add('hidden'); }
-        function submitGoogleAuth() { /* ... existing logic ... */ }
-        function lockPortal() { /* ... existing logic ... */ }
-        function showToast(title, body, type = 'success') { /* ... existing logic ... */ }
-        
-        // Stubs for other UI functions so they don't break
-        function handleAddTicker() {}
-        function switchUserRole() {}
-        function renderWatchlist() {}
-        function renderMasterCharts() {}
+        window.app = null;
+        window.db = null;
+        window.auth = null;
+        window.userId = null;
+        const appId = 'brannon-trades-app';
+
+        async function initFirebase() {
+            try {
+                window.app = initializeApp(firebaseConfig);
+                window.db = getFirestore(window.app);
+                window.auth = getAuth(window.app);
+
+                await signInAnonymously(window.auth);
+                onAuthStateChanged(window.auth, (user) => {
+                    if (user) {
+                        window.userId = user.uid;
+                        document.getElementById('sync-status').className = "text-[9px] text-emerald-500 font-bold uppercase";
+                        document.getElementById('sync-status').innerText = "Live Sync Active";
+                        setupSync();
+                    }
+                });
+            } catch(e) { console.error("Firebase init failed", e); }
+        }
+
+        function setupSync() {
+            const noteRef = doc(window.db, 'artifacts', appId, 'users', window.userId, 'notes', 'playbook');
+            onSnapshot(noteRef, (doc) => {
+                if (doc.exists()) {
+                    document.getElementById('notes').value = doc.data().content || "";
+                }
+            }, (err) => console.error("Sync error:", err));
+
+            document.getElementById('notes').addEventListener('input', async (e) => {
+                await setDoc(noteRef, { content: e.target.value }, { merge: true });
+            });
+        }
+        window.initFirebase = initFirebase;
+    </script>
+    <style>body { font-family: 'Inter', sans-serif; background-color: #0b0f19; }</style>
+</head>
+<body class="text-gray-100 min-h-screen">
+
+    <!-- LOGIN GATEWAY -->
+    <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19] z-[100] flex flex-col justify-center items-center p-4">
+        <div class="bg-[#111827] p-8 rounded-2xl border border-gray-800 w-full max-w-sm shadow-2xl relative">
+            <h1 class="text-2xl font-bold text-white mb-6">Brannon Trades <span class="text-emerald-500 text-xs">v3.2</span></h1>
+            <input type="password" id="gate-passcode" placeholder="Family Passcode" class="w-full bg-[#0b0f19] p-3 rounded-xl mb-4 border border-gray-700 focus:border-emerald-500 outline-none text-white">
+            <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 text-black font-bold rounded-xl mb-4">Access Portal</button>
+            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] border border-gray-700 text-gray-300 rounded-xl hover:bg-gray-800 transition-all text-sm font-medium">Sign in with Google</button>
+        </div>
+    </div>
+
+    <!-- GOOGLE LOGIN MODAL -->
+    <div id="google-signin-modal" class="fixed inset-0 bg-black/80 z-[105] hidden flex justify-center items-center p-4">
+        <div class="bg-[#111827] p-8 rounded-2xl border border-gray-800 w-full max-w-sm">
+            <h3 class="font-bold text-white mb-4">Sign in with Google</h3>
+            <input type="email" id="google-email-input" placeholder="email@gmail.com" class="w-full bg-[#0b0f19] p-3 rounded-xl mb-4 border border-gray-700 text-white">
+            <div class="flex gap-2">
+                <button onclick="closeGoogleSignInModal()" class="flex-1 py-2 bg-gray-800 text-white rounded-xl">Cancel</button>
+                <button onclick="submitGoogleAuth()" class="flex-1 py-2 bg-white text-black font-bold rounded-xl">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN PORTAL -->
+    <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+        <h1 class="font-bold">Brannon Trades <span class="text-xs text-gray-500 ml-2">v3.2</span></h1>
+        <div id="sync-status" class="text-[9px] text-gray-500 font-bold uppercase">Sync Offline</div>
+    </header>
+
+    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-2 bg-[#111827] p-6 rounded-2xl border border-gray-800 min-h-[400px]">
+            <h2 class="font-bold mb-4">Market Workspace</h2>
+            <div id="workspace" class="text-gray-500 italic text-sm">Dashboard connecting to Live Feed...</div>
+        </div>
+        <div class="bg-[#111827] p-6 rounded-2xl border border-gray-800">
+            <h3 class="font-bold mb-4">Playbook</h3>
+            <textarea id="notes" class="w-full h-64 bg-[#0b0f19] p-4 rounded-xl border border-gray-800 text-sm focus:border-emerald-500 outline-none" placeholder="Syncing..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        const WHITELIST = ['peter.brannon@gmail.com', 'joellen77@gmail.com', 'matthewjohnbrannon@gmail.com'];
+
+        function grantAccess() {
+            document.getElementById('lock-screen').classList.add('hidden');
+            document.getElementById('google-signin-modal').classList.add('hidden');
+            initFirebase(); 
+            fetchTwelveData();
+        }
+
+        function attemptUnlock() {
+            if(document.getElementById('gate-passcode').value === 'SmithFamilyCode') grantAccess();
+            else alert("Incorrect passcode.");
+        }
+
+        function attemptGoogleAuth() {
+            document.getElementById('google-signin-modal').classList.remove('hidden');
+        }
+
+        function closeGoogleSignInModal() {
+            document.getElementById('google-signin-modal').classList.add('hidden');
+        }
+
+        function submitGoogleAuth() {
+            const email = document.getElementById('google-email-input').value.toLowerCase();
+            if(WHITELIST.includes(email)) grantAccess();
+            else alert("Email not whitelisted.");
+        }
+
+        async function fetchTwelveData() {
+            const apiKey = localStorage.getItem('twelve');
+            if(!apiKey) return;
+            try {
+                const response = await fetch(`https://api.twelvedata.com/price?symbol=AAPL,MSFT,QQQ&apikey=${apiKey}`);
+                const data = await response.json();
+                let html = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">';
+                for(const [symbol, info] of Object.entries(data)) {
+                    html += `<div class="bg-[#0b0f19] p-4 rounded-xl border border-gray-700">
+                                <div class="text-[9px] text-gray-500 uppercase">${symbol}</div>
+                                <div class="text-xl font-bold">$${parseFloat(info.price).toFixed(2)}</div>
+                             </div>`;
+                }
+                document.getElementById('workspace').innerHTML = html + '</div>';
+            } catch(e) { console.error(e); }
+        }
     </script>
 </body>
 </html>
