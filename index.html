@@ -3,10 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brannon Trades v2.2</title>
+    <title>Brannon Trades v2.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK Imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        window.initFirebase = async () => {
+            const apiKey = localStorage.getItem('firebase');
+            if(!apiKey) return;
+            
+            const firebaseConfig = {
+                apiKey: apiKey,
+                authDomain: "brannon-trades.firebaseapp.com",
+                projectId: "brannon-trades",
+                storageBucket: "brannon-trades.appspot.com",
+                messagingSenderId: "1234567890",
+                appId: "1:1234567890:web:12345"
+            };
+
+            try {
+                window.app = initializeApp(firebaseConfig);
+                window.db = getFirestore(window.app);
+                window.auth = getAuth(window.app);
+                await signInAnonymously(window.auth);
+                onAuthStateChanged(window.auth, (user) => {
+                    if (user) {
+                        document.getElementById('sync-status').className = "text-[9px] text-emerald-500 font-bold uppercase";
+                        document.getElementById('sync-status').innerText = "Live Sync Active";
+                        setupSync(user.uid);
+                    }
+                });
+            } catch(e) { console.error("Firebase init failed", e); }
+        };
+
+        function setupSync(uid) {
+            const noteRef = doc(window.db, 'artifacts', 'brannon-trades-app', 'users', uid, 'notes', 'playbook');
+            onSnapshot(noteRef, (doc) => {
+                if (doc.exists()) {
+                    document.getElementById('notes').value = doc.data().content || "";
+                }
+            });
+            document.getElementById('notes').addEventListener('input', async (e) => {
+                await setDoc(noteRef, { content: e.target.value }, { merge: true });
+            });
+        }
+    </script>
     <style>body { font-family: 'Inter', sans-serif; background-color: #0b0f19; }</style>
 </head>
 <body class="text-gray-100 min-h-screen">
@@ -14,24 +61,19 @@
     <!-- LOGIN GATEWAY -->
     <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19] z-[100] flex flex-col justify-center items-center p-4">
         <div class="bg-[#111827] p-8 rounded-2xl border border-gray-800 w-full max-w-sm shadow-2xl relative">
-            <h1 class="text-2xl font-bold text-white mb-6">Brannon Trades <span class="text-emerald-500 text-xs">v2.2</span></h1>
-            
+            <h1 class="text-2xl font-bold text-white mb-6">Brannon Trades <span class="text-emerald-500 text-xs">v2.5</span></h1>
             <input type="password" id="gate-passcode" placeholder="Family Passcode" class="w-full bg-[#0b0f19] p-3 rounded-xl mb-4 border border-gray-700 focus:border-emerald-500 outline-none">
             <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 text-black font-bold rounded-xl mb-4">Access Portal</button>
-            
-            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] border border-gray-700 text-gray-300 rounded-xl hover:bg-gray-800 transition-all text-sm font-medium">
-                Sign in with Google
-            </button>
+            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] border border-gray-700 text-gray-300 rounded-xl hover:bg-gray-800 transition-all text-sm font-medium">Sign in with Google</button>
         </div>
     </div>
 
     <!-- MAIN PORTAL -->
     <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex justify-between items-center">
-        <h1 class="font-bold">Brannon Trades <span class="text-xs text-gray-500 ml-2">v2.2</span></h1>
+        <h1 class="font-bold">Brannon Trades <span class="text-xs text-gray-500 ml-2">v2.5</span></h1>
         <div class="flex items-center gap-4">
             <div id="user-badge" class="hidden text-[10px] font-bold text-emerald-400 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 uppercase tracking-wider">Admin</div>
             <button onclick="openConfigModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-gear"></i></button>
-            <!-- UI Refresh Utility -->
             <button onclick="window.location.reload()" class="text-gray-500 hover:text-white text-xs"><i class="fa-solid fa-rotate-right"></i></button>
         </div>
     </header>
@@ -41,14 +83,8 @@
         <div class="bg-[#111827] border border-gray-800 p-6 rounded-2xl w-full max-w-md">
             <h3 class="font-bold mb-6">System Configuration</h3>
             <div class="space-y-4">
-                <div>
-                    <label class="text-[10px] uppercase text-gray-500 font-bold block mb-1">Firebase API Key</label>
-                    <input type="text" id="cfg-firebase" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono text-emerald-400">
-                </div>
-                <div>
-                    <label class="text-[10px] uppercase text-gray-500 font-bold block mb-1">Twelve Data API Key</label>
-                    <input type="text" id="cfg-twelve" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono text-emerald-400">
-                </div>
+                <div><label class="text-[10px] uppercase text-gray-500 font-bold block mb-1">Firebase API Key</label><input type="text" id="cfg-firebase" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono text-emerald-400"></div>
+                <div><label class="text-[10px] uppercase text-gray-500 font-bold block mb-1">Twelve Data API Key</label><input type="text" id="cfg-twelve" class="w-full bg-[#0b0f19] p-2 rounded-lg border border-gray-700 text-xs font-mono text-emerald-400"></div>
                 <button onclick="saveConfiguration()" class="w-full py-2 bg-emerald-500 text-black rounded-lg font-bold">Save Settings</button>
             </div>
         </div>
@@ -60,7 +96,10 @@
             <div id="workspace" class="text-gray-500 italic text-sm">Dashboard connecting to Live Feed...</div>
         </div>
         <div class="bg-[#111827] p-6 rounded-2xl border border-gray-800">
-            <h3 class="font-bold mb-4">Playbook</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold">Playbook</h3>
+                <span id="sync-status" class="text-[9px] text-gray-500 font-bold uppercase">Sync Offline</span>
+            </div>
             <textarea id="notes" class="w-full h-64 bg-[#0b0f19] p-4 rounded-xl border border-gray-800 text-sm focus:border-emerald-500 outline-none" placeholder="Admin notes..."></textarea>
         </div>
     </div>
@@ -83,18 +122,18 @@
             document.getElementById('lock-screen').classList.add('hidden');
             if(role === 'admin') document.getElementById('user-badge').classList.remove('hidden');
             else document.getElementById('notes').readOnly = true;
-            fetchTwelveData(); // Attempt data fetch on access
+            
+            if(window.initFirebase) window.initFirebase();
+            fetchTwelveData();
         }
 
         function openConfigModal() { document.getElementById('config-modal').classList.remove('hidden'); }
-        function closeConfigModal() { document.getElementById('config-modal').classList.remove('hidden').add('hidden'); } // Fixed potential error here
         
         function saveConfiguration() {
             localStorage.setItem('firebase', document.getElementById('cfg-firebase').value);
             localStorage.setItem('twelve', document.getElementById('cfg-twelve').value);
-            alert("Settings saved locally.");
-            document.getElementById('config-modal').classList.add('hidden');
-            fetchTwelveData();
+            alert("Settings saved. Refreshing...");
+            window.location.reload();
         }
 
         async function fetchTwelveData() {
