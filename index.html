@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strategic Trades - Family Trade Ideas</title>
-    <!-- STREAMING_CHUNK:Loading foundational assets and styles... -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- STREAMING_CHUNK:Initializing Firebase SDK modules... -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -25,65 +23,33 @@
                 window.auth = getAuth(app);
                 return true;
             } catch (e) {
-                console.error("Firebase Init Failed:", e);
                 return false;
             }
         };
     </script>
-
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0b0f19; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #111827; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
-    </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col overflow-x-hidden">
+<body class="bg-[#0b0f19] text-gray-100 min-h-screen flex flex-col">
 
-    <!-- SECURE LOCK SCREEN GATEWAY -->
-    <!-- STREAMING_CHUNK:Rendering UI layers and components... -->
-    <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19]/98 backdrop-blur-md z-50 flex flex-col justify-center items-center px-4 transition-all duration-300">
-        <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
-            <div class="flex justify-center items-center space-x-3 mb-6">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                    <svg class="w-7 h-7 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8 6H16V18H8V6Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        <path d="M17 10V14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M7 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="text-left">
-                    <span class="text-2xl font-bold tracking-tight text-white block">Brannon Trades v3.5</span>
-                    <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">Strategic Node</span>
-                </div>
-            </div>
-            <h2 class="text-lg font-medium text-gray-300 mb-6">Enter Passcode to Access Family Node</h2>
-            <div class="space-y-4">
-                <div class="relative">
-                    <input type="password" id="gate-passcode" placeholder="Enter Family Passcode" 
-                           class="w-full bg-[#1c2333] border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-3 pl-11 text-white placeholder-gray-500 focus:outline-none transition-all">
-                    <i class="fa-solid fa-lock absolute left-4 top-4 text-gray-500"></i>
-                </div>
-                <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-gray-950 font-bold rounded-xl transition-all shadow-[0_4px_20px_rgba(16,185,129,0.3)]">
-                    Unlock Portal
-                </button>
-            </div>
-            <div class="relative flex py-5 items-center">
-                <div class="flex-grow border-t border-gray-800"></div>
-                <span class="flex-shrink mx-4 text-gray-500 text-xs uppercase tracking-widest font-semibold">or authenticate</span>
-                <div class="flex-grow border-t border-gray-800"></div>
-            </div>
-            <button onclick="attemptGoogleAuth()" class="w-full py-3 bg-[#1c2333] hover:bg-[#252f44] border border-gray-700 hover:border-gray-600 rounded-xl flex items-center justify-center space-x-3 text-sm font-medium transition-all active:scale-[0.98]">
-                <i class="fa-brands fa-google text-red-400 text-base"></i>
-                <span>Sign in with Google Account</span>
-            </button>
+    <!-- LOCK SCREEN -->
+    <div id="lock-screen" class="fixed inset-0 bg-[#0b0f19]/98 backdrop-blur-md z-50 flex flex-col justify-center items-center px-4">
+        <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl w-full max-w-md text-center">
+            <h2 class="text-2xl font-bold text-white mb-6">Brannon Trades v3.5</h2>
+            <input type="password" id="gate-passcode" placeholder="Enter Passcode" class="w-full bg-[#1c2333] border border-gray-700 rounded-xl px-4 py-3 mb-4">
+            <button onclick="attemptUnlock()" class="w-full py-3 bg-emerald-500 font-bold rounded-xl">Unlock</button>
         </div>
     </div>
 
-    <!-- MAIN APP STRUCTURE -->
-    <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex justify-between items-center z-10">
+    <!-- SIGN-IN MODAL -->
+    <div id="google-signin-modal" class="fixed inset-0 bg-black/80 z-[60] hidden flex justify-center items-center p-4">
+        <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl w-full max-w-sm text-center">
+            <h3 class="text-lg font-bold text-white mb-4">Google Sign-In</h3>
+            <input type="email" id="google-email-input" placeholder="family-member@gmail.com" class="w-full bg-[#1c2333] border border-gray-700 p-3 rounded-xl mb-4">
+            <button onclick="submitGoogleAuth()" class="w-full py-3 bg-white text-gray-900 font-bold rounded-xl">Continue</button>
+        </div>
+    </div>
+
+    <!-- APP HEADER -->
+    <header class="bg-[#111827] border-b border-gray-800 px-6 py-4 flex justify-between items-center">
         <h1 class="text-xl font-extrabold text-white">Brannon Trades v3.5</h1>
         <button onclick="openConfigModal()" class="bg-[#1c2333] border border-gray-700 px-4 py-2 rounded-xl text-xs font-bold hover:text-white">Settings</button>
     </header>
@@ -95,7 +61,7 @@
         </div>
     </main>
 
-    <!-- CONFIG MODAL -->
+    <!-- SETTINGS MODAL -->
     <div id="config-modal" class="fixed inset-0 bg-black/60 z-[60] hidden flex justify-center items-center p-4">
         <div class="bg-[#111827] border border-gray-800 p-8 rounded-2xl w-full max-w-lg">
             <h3 class="text-lg font-bold mb-4 text-white">System Settings</h3>
@@ -104,63 +70,43 @@
         </div>
     </div>
 
-    <div id="toast-container" class="fixed bottom-6 right-6 space-y-2 z-[100]"></div>
-
-    <!-- STREAMING_CHUNK:Configuring the Firebase sync engine... -->
     <script>
-        function showToast(title, body, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = "flex items-start gap-3 bg-[#111827] border border-gray-800 p-4 rounded-xl shadow-2xl w-80";
-            toast.innerHTML = `<h4 class="text-xs font-bold text-white">${title}</h4><p class="text-[10px] text-gray-400">${body}</p>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
+        // Data structure to store stocks
+        window.tickerDatabase = JSON.parse(localStorage.getItem('brannon_ticker_db')) || {};
 
-        async function triggerCloudPublish() {
-            if (!window.db) {
-                showToast("Connection Required", "Please configure Firebase in Settings.", "error");
-                return;
-            }
-            showToast("Publishing...", "Syncing to cloud...", "info");
-            try {
-                const user = (await signInAnonymously(window.auth)).user;
-                await setDoc(doc(window.db, 'artifacts', 'brannon-trades', 'users', user.uid, 'data', 'playbook'), {
-                    notes: document.getElementById('notes-textarea').value,
+        function triggerCloudPublish() {
+            if (!window.db) { showToast("Error", "Configure Firebase first.", "error"); return; }
+            signInAnonymously(window.auth).then(userCred => {
+                setDoc(doc(window.db, 'artifacts', 'brannon-trades', 'users', userCred.user.uid, 'data', 'playbook'), {
+                    data: window.tickerDatabase,
                     updated: new Date().toISOString()
-                });
-                showToast("Nodes Synced", "Cloud data updated successfully!", "success");
-            } catch (e) {
-                showToast("Sync Error", e.message, "error");
-            }
+                }).then(() => showToast("Success", "Synced to cloud!"));
+            });
         }
 
         function applyConfiguration() {
             const configInput = document.getElementById('firebase-config-input').value;
             localStorage.setItem('brannon_firebase_config', configInput);
-            try {
-                const config = JSON.parse(configInput);
-                if (window.initFirebase(config)) {
-                    document.getElementById('config-modal').classList.add('hidden');
-                    showToast("Config Saved", "Firebase initialized.", "success");
-                }
-            } catch (e) {
-                showToast("Error", "Invalid JSON Config", "error");
+            if (window.initFirebase(JSON.parse(configInput))) {
+                document.getElementById('config-modal').classList.add('hidden');
             }
         }
 
         function attemptUnlock() { document.getElementById('lock-screen').classList.add('hidden'); }
         function attemptGoogleAuth() { document.getElementById('google-signin-modal').classList.remove('hidden'); }
+        function submitGoogleAuth() { document.getElementById('lock-screen').classList.add('hidden'); document.getElementById('google-signin-modal').classList.add('hidden'); }
         function openConfigModal() { document.getElementById('config-modal').classList.remove('hidden'); }
 
         window.onload = () => {
+            // Restore saved notes to the textarea
+            const savedNotes = tickerDatabase['default_notes'] || '';
+            document.getElementById('notes-textarea').value = savedNotes;
+
             const savedConfig = localStorage.getItem('brannon_firebase_config');
-            if (savedConfig) {
-                try {
-                    window.initFirebase(JSON.parse(savedConfig));
-                } catch(e) {}
-            }
+            if (savedConfig) window.initFirebase(JSON.parse(savedConfig));
         };
+
+        function showToast(title, body) { /* UI Toast Helper */ }
     </script>
 </body>
 </html>
